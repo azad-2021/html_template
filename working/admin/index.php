@@ -63,7 +63,7 @@ if (isset($_POST['SaveStaff'])) {
   }else{
     echo $errors;
   }
-  $con->close();
+
 
 }
 
@@ -116,9 +116,19 @@ if (isset($_POST['SaveStudent'])) {
     echo $errors;
     echo "<meta http-equiv='refresh' content='0'>";
   }
-  $con->close();
 
 }
+
+$query ="SELECT count(StudentID) FROM u241098585_school_demo.students WHERE Passout=0";
+$result = mysqli_query($con, $query);
+$row=mysqli_fetch_assoc($result);
+$NoStudents=$row['count(StudentID)'];
+
+$query ="SELECT count(StaffID) FROM u241098585_school_demo.staff WHERE Inservice=1";
+$result = mysqli_query($con, $query);
+$row=mysqli_fetch_assoc($result);
+$NoStaff=$row['count(StaffID)'];
+
 ?>
 
 <!DOCTYPE html>
@@ -172,7 +182,7 @@ if (isset($_POST['SaveStudent'])) {
                 <div class="row">
                   <div class="col-9">
                     <div class="d-flex align-items-center align-self-start">
-                      <h3 class="mb-0">1200</h3>
+                      <h3 class="mb-0"><?php echo $NoStudents; ?></h3>
                     </div>
                   </div>
                   <div class="col-3">
@@ -191,7 +201,7 @@ if (isset($_POST['SaveStudent'])) {
                 <div class="row">
                   <div class="col-9">
                     <div class="d-flex align-items-center align-self-start">
-                      <h3 class="mb-0">50</h3>
+                      <h3 class="mb-0"><?php echo $NoStaff; ?></h3>
                     </div>
                   </div>
                   <div class="col-3">
@@ -654,3 +664,5 @@ if (isset($_POST['SaveStudent'])) {
 
       </body>
       </html>
+
+      <?php   $con->close(); ?>
