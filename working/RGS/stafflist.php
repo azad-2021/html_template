@@ -16,7 +16,7 @@ $userid=1;
   <!-- Required meta tags -->
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <title>Student</title>
+  <title>Staff</title>
   <!-- plugins:css -->
   <link rel="stylesheet" href="assets/vendors/mdi/css/materialdesignicons.min.css">
   <link rel="stylesheet" href="assets/vendors/css/vendor.bundle.base.css">
@@ -41,213 +41,7 @@ $userid=1;
   <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/select/1.4.0/css/select.dataTables.min.css">
 
   <style type="text/css">
-    /*:root {
 
-      --theadColor: #38000e;
-
-      --theadTextColor: #fff;
-
-      --darkColor:#000;
-
-      --lightColor:#fff;
-
-      --darkRowColor: #e8003a;
-
-    }
-
-    table.dataTable tbody >
-    tr.selected {
-      background-color: green;
-    }
-
-    table.dataTable {
-
-      border:1px solid #000;
-
-      background-color: #000;
-
-    }
-
-    th,tr,td
-
-    {
-
-      border-color: #000 !important;
-
-    }
-
-    thead {
-
-      background-color: var(--theadColor);
-
-
-
-    }
-
-    thead > tr,
-
-    thead > tr > th {
-
-      background-color: transparent;
-
-      color: var(--theadTextColor) !important;
-
-      font-weight: normal;
-
-      text-align: start;
-
-    }
-
-    table.dataTable thead th,
-
-    table.dataTable thead td {
-
-      border-bottom: 0px solid #111 !important;
-
-    }
-
-    .dataTables_wrapper > div {
-
-      margin: 5px;
-
-    }
-
-    table.dataTable.display tbody tr.even > .sorting_1,
-
-    table.dataTable.order-column.stripe tbody tr.even> .sorting_1, 
-
-    table.dataTable.display   tbody tr.even,
-
-    table.dataTable.display tbody tr.odd > .sorting_1,
-
-    table.dataTable.order-column.stripe tbody tr.odd > .sorting_1,
-
-    table.dataTable.display tbody tr.odd {
-
-      background-color: var(--darkRowColor);
-
-      color:var(--lightColor);
-
-    }
-
-    table.dataTable thead th {
-
-      position: relative;
-
-      background-image: none !important;
-
-    }
-
-    table.dataTable thead th.sorting:after,
-
-    table.dataTable thead th.sorting_asc:after,
-
-    table.dataTable thead th.sorting_desc:after {
-
-      position: absolute;
-
-      top: 12px;
-
-      right: 8px;
-
-      display: block;
-
-      font-family: "Font Awesome\ 5 Free";
-
-    }
-
-    table.dataTable thead th.sorting:after {
-
-      content: "\f0dc";
-
-      color: #ddd;
-
-      font-size: 0.8em;
-
-      padding-top: 0.12em;
-
-    }
-
-    table.dataTable thead th.sorting_asc:after {
-
-      content: "\f0de";
-
-    }
-
-    table.dataTable thead th.sorting_desc:after {
-
-      content: "\f0dd";
-
-    }
-
-    table.dataTable.display tbody tr:hover > .sorting_1,
-
-    table.dataTable.order-column.hover tbody tr:hover > .sorting_1,
-
-    tbody tr:hover {
-
-      background-color: var(--darkColor) !important;
-
-      color: #fff;
-
-    }
-
-    .dataTables_wrapper .dataTables_paginate .paginate_button.current, 
-
-    .dataTables_wrapper .dataTables_paginate .paginate_button.current:hover {
-
-      background: none !important;
-
-      border-radius: 50px;
-
-      background-color: var(--theadColor) !important;
-
-      color:var(--lightColor) !important
-
-    }
-
-
-
-
-
-    .dataTables_wrapper .dataTables_paginate .paginate_button {
-
-      background: none !important;
-
-      color:var(--darkColor) !important
-
-    }
-
-    .paginate_button.current:hover
-
-    {
-
-      background: none !important;
-
-      border-radius: 50px;
-
-      background-color: var(--theadColor) !important;
-
-      color:#fff !important
-
-    }
-
-    .dataTables_wrapper .dataTables_paginate .paginate_button.current:hover,
-
-    .dataTables_wrapper .dataTables_paginate .paginate_button:hover {
-
-      border: 1px solid #979797;
-
-      background: none !important;
-
-      border-radius: 50px !important;
-
-      background-color: #000 !important;
-
-      color: #fff !important;
-
-    }
-*/
   </style>
 </head>
 <body>
@@ -269,7 +63,7 @@ $userid=1;
           <div class="col-12 grid-margin">
             <div class="card">
               <div class="card-body">
-                <h4 class="card-title">Student Details</h4>
+                <h4 class="card-title">Staff Details</h4>
 
                 <form align="center" id="SalaryForm">
                   <div class="row">
@@ -304,23 +98,22 @@ $userid=1;
                   <table class="table table-hover table-bordered border-primary table-light">
                     <thead>
                       <th>Sr. No</th>
-                      <th>Student Name</th>
-                      <th>Father's Name</th>
-                      <th>Mother's Name</th>
+                      <th>Staff Name</th>
                       <th>Gender</th>    
                       <th>Aadhaar Card</th>                      
                       <th>Mobile</th>
                       <th>Address</th>
-                      <th>Lateral Entry</th>
-                      <th>Course Amount</th>
-                      <th>Received Amount</th>
+                      <th>Email</th>
+                      <th>Education Details</th>
+                      <th>Salary Amount</th>
                       <th>Pending Amount</th>
-                      <th>Registration Date</th>
-                      <th>Remark</th>
+                      <th>Total Leave</th>
+                      <th>Taken Leave</th>
+                      <th>Joining Date</th>
                       <th>Action</th>
                     </tr>
                   </thead>
-                  <tbody id="StudentData">
+                  <tbody id="StaffData">
 
                   </tbody>
                 </table>
@@ -412,9 +205,9 @@ $userid=1;
       $.ajax({
         type:'POST',
         url:'read.php',
-        data:{'BranchIDSt':BranchID},
+        data:{'BranchIDSta':BranchID},
         success:function(result){
-          $('#StudentData').html(result);
+          $('#StaffData').html(result);
         }
       }); 
     }
@@ -442,7 +235,24 @@ $userid=1;
     }, delayInMilliseconds)
   });
 
+  $(document).on('click', '.SalaryDetailsS', function(){
 
+    var StaffID=$(this).attr("id");
+    var delayInMilliseconds = 1000; 
+
+    setTimeout(function() {
+      if (StaffID) {
+        $.ajax({
+          type:'POST',
+          url:'read.php',
+          data:{'StaffIDSalary':StaffID},
+          success:function(result){
+            $('#SalaryDataS').html(result);
+          }
+        });
+      }
+    }, delayInMilliseconds)
+  });
 
 </script>
 

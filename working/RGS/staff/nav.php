@@ -40,23 +40,12 @@
           </a>
         </li>
 
-
-
-        <li class="nav-item menu-items">
-          <a class="nav-link" href="">
-            <span class="menu-icon">
-              <i class="mdi mdi-chart-bar"></i>
-            </span>
-            <span class="menu-title">Your Salary</span>
-          </a>
-        </li>
-
         <li class="nav-item menu-items">
           <a class="nav-link" href="studentlist.php">
             <span class="menu-icon">
               <i class="mdi mdi-playlist-play"></i>
             </span>
-            <span class="menu-title">Student Details</span>
+            <span class="menu-title">Student Attendance</span>
           </a>
         </li>
       </ul>
@@ -66,7 +55,7 @@
       <!-- partial:partials/_navbar.html -->
       <nav class="navbar p-0 fixed-top d-flex flex-row">
         <div class="navbar-brand-wrapper d-flex d-lg-none align-items-center justify-content-center">
-          <a class="navbar-brand brand-logo-mini" href="index.php"><img src="assets/images/logo-mini.svg" alt="logo" /></a>
+          <a class="navbar-brand brand-logo-mini" href="index.php"><img src="../assets/images/logo-mini.svg" alt="logo" /></a>
         </div>
         <div class="navbar-menu-wrapper flex-grow d-flex align-items-stretch">
           <button class="navbar-toggler navbar-toggler align-self-center" type="button" data-toggle="minimize">

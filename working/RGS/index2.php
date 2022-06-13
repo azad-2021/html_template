@@ -5,8 +5,68 @@ include"connection.php";
 date_default_timezone_set('Asia/Calcutta');
 $timestamp =date('y-m-d H:i:s');
 $Date = date('Y-m-d',strtotime($timestamp));
-$userid=3;
-$TakenLeave=0;
+$userid=1;
+
+if (isset($_POST['SaveStaff'])) {
+  $Name=$_POST['StaffName'];
+  $Mobile=$_POST['StaffNumber'];
+  $Aadhar=$_POST['StaffAadhar'];
+  $Gender=$_POST['Gender'];
+  $Address=$_POST['StaffAddress'];
+  $Education=$_POST['StaffEducation'];
+  $Email=$_POST['StaffEmail'];
+  $Salary=$_POST['SalaryAmount'];
+
+  $file_name = $_FILES['Resume']['name'];
+  $file_size =$_FILES['Resume']['size'];
+  $file_tmp =$_FILES['Resume']['tmp_name'];
+  $file_type=$_FILES['Resume']['type'];
+  $tmp = explode('.', $_FILES['Resume']['name']);
+  $file_ext = strtolower(end($tmp));    
+  $Resume=$Name.".".$file_ext;         
+  $extensions= array("pdf");
+
+  $errors='';
+  $query ="SELECT * FROM `staff` WHERE MobileNo=$Mobile";
+  $result1 = mysqli_query($con, $query);
+  
+
+  $query ="SELECT * FROM `staff` WHERE Email='$Email'";
+  $result2 = mysqli_query($con, $query);
+
+  if(in_array($file_ext,$extensions)=== false){
+    $errors ='<script>alert("File must be pdf")</script>';
+  }elseif($file_size > 2097152){
+    $errors ='<script>alert("File must be less than 2MB")</script>';
+  }elseif($file_size == 0){
+    $errors ='<script>alert("File must be less than 2MB")</script>';
+  }elseif(strlen((string)$Mobile<10)){
+    $errors='<script>alert("Mobile Number Must Be 10 Digit Long")</script>';
+  }elseif (mysqli_num_rows($result1)>0){
+    $errors='<script>alert("Mobile Number Already Exist")</script>';
+  }elseif (mysqli_num_rows($result2)>0){
+    $errors='<script>alert("Email Already Exist")</script>';
+  }
+
+  if (empty($errors)) {
+
+    $sql = "INSERT INTO staff (StaffName, MobileNo, Email, AadharCardNo, Address, EducationDetails, Password, EntryDate, EntryByID, Gender, SalaryAmount)
+    VALUES ('$Name', $Mobile, '$Email', $Aadhar, '$Address', '$Education', 'ramanujan@123', '$Date', $userid, '$Gender', $Salary)";
+
+    if ($con->query($sql) === TRUE) {
+      $Upload=move_uploaded_file($file_tmp,"resume/".$Resume);
+      echo '<script>alert("Staff added successfully")</script>';
+      echo "<meta http-equiv='refresh' content='0'>";
+    } else {
+      echo "Error: " . $sql . "<br>" . $con->error;
+    }
+  }else{
+    echo $errors;
+  }
+
+
+}
+
 
 
 if (isset($_POST['SaveLeave'])) {
@@ -14,50 +74,50 @@ if (isset($_POST['SaveLeave'])) {
   $SDate=$_POST['SDate'];
   $EDate=$_POST['EDate'];
 
+  
+
   $sql = "INSERT INTO LeaveApplication (StaffID, Description, StartDate, EndDate, ApplyDate)
-  VALUES ($userid, '$Description', '$SDate', '$EDate', '$timestamp')";
+  VALUES ($userid, '$Description', '$SDate', '$EDate', '$Date')";
 
   if ($con->query($sql) === TRUE) {
 
-    $query ="SELECT TakenLeave FROM `staff` WHERE StaffID=$userid";
+    $query ="SELECT min(StartDate), max(EndDate) FROM LeaveApplication WHERE StaffID=$userid";
     $result2 = mysqli_query($con, $query);
-    $arr=mysqli_fetch_assoc($result2);
-    $Taken=$arr['TakenLeave'];
-    $interval = date_diff(date_create($SDate), date_create($EDate));
-    $d= $interval->format('%R%a');
-    $int = (int)$d;   
-    $TakenLeave=$int+$Taken;
+    if (mysqli_num_rows($result1)>0){
+      $row=mysqli_fetch_assoc($result);
 
-    $sql = "UPDATE staff SET TakenLeave=$TakenLeave WHERE StaffID=$userid";
-    if ($con->query($sql) === TRUE) {
-
-      echo '<script>alert("Leave applied successfully")</script>';
-      echo "<meta http-equiv='refresh' content='0'>";
-    }else {
-      echo "Error: " . $sql . "<br>" . $con->error;
+      $interval = date_diff($row['max(EndDate)'], $row['min(StartDate)'];
+      $d= $interval->format('%R%a');
+      $int = (int)$d;
     }
+    echo '<script>alert("Student added successfully")</script>';
+    echo "<meta http-equiv='refresh' content='0'>";
   } else {
     echo "Error: " . $sql . "<br>" . $con->error;
   }
+}else{
+  echo $errors;
+  echo "<meta http-equiv='refresh' content='0'>";
 }
 
+}
 
-$query ="SELECT * FROM staff WHERE StaffID=$userid";
-$result = mysqli_query($con, $query);
-$row=mysqli_fetch_assoc($result);
-$TotalLeave=$row['StaffLeave'];
-$TakenLeave=$row['TakenLeave'];
-$BranchID=$row['BranchID'];
-
-$query ="SELECT count(StudentID) FROM students WHERE BranchID=$BranchID and Passout=0";
+$query ="SELECT count(StudentID), sum(CourseAmount), sum(ReceivedAmount) FROM students WHERE Passout=0";
 $result = mysqli_query($con, $query);
 $row=mysqli_fetch_assoc($result);
 $NoStudents=$row['count(StudentID)'];
-
-$query ="SELECT sum(SalaryAmount), sum(ReceivedAmount) FROM salarydetails WHERE StaffID=$userid";
+$PendingFees=$row['sum(CourseAmount)']-$row['sum(ReceivedAmount)'];
+$query ="SELECT count(StaffID) FROM staff WHERE Inservice=1";
 $result = mysqli_query($con, $query);
 $row=mysqli_fetch_assoc($result);
-$PendingSalary=$row['sum(SalaryAmount)']-$row['sum(ReceivedAmount)'];
+$NoStaff=$row['count(StaffID)'];
+
+$query ="SELECT count(StudentID), sum(CourseAmount), sum(ReceivedAmount) FROM students WHERE Passout=0 and BranchID=7";
+$result = mysqli_query($con, $query);
+$row=mysqli_fetch_assoc($result);
+$NoStudents=$row['count(StudentID)'];
+$PendingFeesBPharma=$row['sum(CourseAmount)']-$row['sum(ReceivedAmount)'];
+
 ?>
 
 <!DOCTYPE html>
@@ -105,67 +165,19 @@ $PendingSalary=$row['sum(SalaryAmount)']-$row['sum(ReceivedAmount)'];
       include"modals.php";
       ?>
       <div class="content-wrapper">
+
         <div class="row">
 
-          <div class="col-xl-4 col-sm-6 grid-margin stretch-card">
+          <div class="col-lg-12 grid-margin stretch-card">
             <div class="card">
               <div class="card-body">
-                <div class="row">
-                  <div class="col-9">
-                    <div class="d-flex align-items-center align-self-start">
-                      <h3 class="mb-0"><?php echo $NoStudents; ?></h3>
-                    </div>
-                  </div>
-                  <div class="col-3">
-                    <div class="icon icon-box-success ">
-                      <span class="mdi mdi-poll icon-item"></span>
-                    </div>
-                  </div>
-                </div>
-                <h6 class="text-muted font-weight-normal">Total Students</h6>
-              </div>
-            </div>
-          </div>
-          <div class="col-xl-4 col-sm-6 grid-margin stretch-card">
-            <div class="card">
-              <div class="card-body">
-                <div class="row">
-                  <div class="col-9">
-                    <div class="d-flex align-items-center align-self-start">
-                      <h3 class="mb-0"><?php echo $TotalLeave.' / '.$TakenLeave; ?></h3>
-                    </div>
-                  </div>
-                  <div class="col-3">
-                    <div class="icon icon-box-success">
-                      <span class="mdi mdi-poll icon-item"></span>
-                    </div>
-                  </div>
-                </div>
-                <h6 class="text-muted font-weight-normal">Total Leave / Taken leave</h6>
-              </div>
-            </div>
-          </div>
-
-          <div class="col-xl-4 col-sm-6 grid-margin stretch-card">
-            <div class="card">
-              <div class="card-body">
-                <div class="row">
-                  <div class="col-9">
-                    <div class="d-flex align-items-center align-self-start">
-                      <h3 class="mb-0"><i class="mdi mdi-currency-inr"></i><?php echo $PendingSalary; ?></h3>
-                    </div>
-                  </div>
-                  <div class="col-3">
-                    <div class="icon icon-box-success ">
-                      <span class="mdi mdi-poll icon-item"></span>
-                    </div>
-                  </div>
-                </div>
-                <h6 class="text-muted font-weight-normal">Pending Salary</h6>
+                <h4 class="card-title">Student Attanndance (%)</h4>
+                <canvas id="PercentageAttandance" style="height:230px"></canvas>
               </div>
             </div>
           </div>
         </div>
+
         <div class="row ">
           <div class="col-12 grid-margin">
             <div class="card">
@@ -174,40 +186,29 @@ $PendingSalary=$row['sum(SalaryAmount)']-$row['sum(ReceivedAmount)'];
                 <div class="table-responsive">
                   <table class="table">
                     <thead>
-                      <th>Sr. No</th>
-                      <th>Application No</th>
-                      <th>Description</th>
-                      <th> Duration</th>                    
-                      <th>Status</th>
-                      <th>Apply Date</th>
+                      <th> Application No </th>
+                      <th> Description </th>
+                      <th> Duration </th>
+                      <th> Total Leave </th>    
+                      <th> Taken Leave </th>                      
+                      <th> Status </th>
+                      <th> Action </th>
                     </tr>
                   </thead>
                   <tbody>
-                    <?php 
-                    $query="SELECT * from LeaveApplication WHERE StaffID=$userid";
+                    <tr>
+                      <td>HYZ</td>
+                      <td> 02312 </td>
+                      <td>AAA BBB</td>
+                      <td> 27-05-2022 to 28-05-2022 </td>
+                      <td> 10 </td>
+                      <td> 2 </td>
 
-                    $result = mysqli_query($con, $query);
-                    if (mysqli_num_rows($result)>0){
-                      $Sr=0;
-                      while($row=mysqli_fetch_assoc($result)){
-                        if ($row['Status']==0) {
-                          $Status='<div class="badge badge-outline-warning">Pending</div>';
-                        }elseif($row['Status']==1){
-                          $Status='<div class="badge badge-outline-success">Approved</div>';
-                        }elseif($row['Status']==2){
-                          $Status='<div class="badge badge-outline-danger">Rejected</div>';
-                        }
-                        $Sr++;
-                        print "<tr>";
-                        print '<td>'.$Sr."</td>";
-                        print '<td>'.$row['ApplicationID']."</td>";
-                        print '<td>'.$row['Description']."</td>";
-                        print '<td>'.date('d-m-Y',strtotime($row['StartDate'])).' to '.date('d-m-Y',strtotime($row['EndDate']))."</td>";
-                        print '<td>'.$Status."</td>";
-                        print '<td>'.date('d-m-Y',strtotime($row['ApplyDate']))."</td>";
-                        print "</tr>";
-                      }
-                    }?>
+                      <td>
+                        <div class="badge badge-outline-success">Approved</div>
+                      </td>
+                      <td><button class="btn btn-danger"> Cancel</button></td>
+                    </tr>
                     
                   </tbody>
                 </table>
@@ -228,27 +229,67 @@ $PendingSalary=$row['sum(SalaryAmount)']-$row['sum(ReceivedAmount)'];
                 <th>Amount</th>
               </thead>
               <tbody>
-                <?php 
-                $query="SELECT * from salarydetails WHERE StaffID=$userid";
+                <tr>
+                  <td>1</td>
+                  <td class="text-right"> 1500 </td>
+                  <td class="text-right font-weight-medium"> 56.35% </td>
+                  <td class="text-right font-weight-medium"> 56.35% </td>
+                </tr>
+                <tr>
 
-                $result = mysqli_query($con, $query);
-                if (mysqli_num_rows($result)>0){
-                  $Sr=0;
-                  while($row=mysqli_fetch_assoc($result)){
-                    if (!empty($row['UpdatedDate'])) {
-                      $UpdateDate=date('d-m-Y',strtotime($row['UpdatedDate']));
-                    }else{
-                      $UpdateDate='';
-                    }
-                    $Sr++;
-                    print "<tr>";
-                    print '<td>'.$Sr."</td>";
-                    print '<td>'.date('M-Y',strtotime($row['SalaryOfMonth']))."</td>";
-                    print '<td>'.$UpdateDate."</td>";
-                    print '<td>'.$row['ReceivedAmount']."</td>";
-                    print "</tr>";
-                  }
-                }?>
+                  <td>2</td>
+                  <td class="text-right"> 800 </td>
+                  <td class="text-right font-weight-medium"> 33.25% </td>
+                  <td class="text-right font-weight-medium"> 56.35% </td>
+                </tr>
+                <tr>
+                  <td>3</td>
+                  <td class="text-right"> 760 </td>
+                  <td class="text-right font-weight-medium"> 15.45% </td>
+                  <td class="text-right font-weight-medium"> 56.35% </td>
+                </tr>
+                <tr>
+                  <td>4</td>
+                  <td class="text-right"> 450 </td>
+                  <td class="text-right font-weight-medium"> 25.00% </td>
+                  <td class="text-right font-weight-medium"> 56.35% </td>
+                </tr>
+                <tr>
+                  <td>5</td>
+                  <td class="text-right"> 620 </td>
+                  <td class="text-right font-weight-medium"> 10.25% </td>
+                  <td class="text-right font-weight-medium"> 56.35% </td>
+                </tr>
+                <tr>
+                  <td>6</td>
+                  <td class="text-right"> 230 </td>
+                  <td class="text-right font-weight-medium"> 75.00% </td>
+                  <td class="text-right font-weight-medium"> 56.35% </td>
+                </tr>
+                <tr>
+                  <td>7</td>
+                  <td class="text-right"> 760 </td>
+                  <td class="text-right font-weight-medium"> 15.45% </td>
+                  <td class="text-right font-weight-medium"> 56.35% </td>
+                </tr>
+                <tr>
+                  <td>8</td>
+                  <td class="text-right"> 450 </td>
+                  <td class="text-right font-weight-medium"> 25.00% </td>
+                  <td class="text-right font-weight-medium"> 56.35% </td>
+                </tr>
+                <tr>
+                  <td>9</td>
+                  <td class="text-right"> 620 </td>
+                  <td class="text-right font-weight-medium"> 10.25% </td>
+                  <td class="text-right font-weight-medium"> 56.35% </td>
+                </tr>
+                <tr>
+                  <td>10</td>
+                  <td class="text-right"> 230 </td>
+                  <td class="text-right font-weight-medium"> 75.00% </td>
+                  <td class="text-right font-weight-medium"> 56.35% </td>
+                </tr>
               </tbody>
             </table>
           </div>
@@ -319,6 +360,9 @@ $PendingSalary=$row['sum(SalaryAmount)']-$row['sum(ReceivedAmount)'];
           </div>
 
         </div>
+        <script type="text/javascript">
+          var PendingBPharma=<?php echo $PendingFeesBPharma ?>
+        </script>
 
         <script src="../assets/vendors/js/vendor.bundle.base.js"></script>
         <!-- endinject -->
@@ -340,6 +384,7 @@ $PendingSalary=$row['sum(SalaryAmount)']-$row['sum(ReceivedAmount)'];
         <!-- endinject -->
         <!-- Custom js for this page -->
         <script src="../assets/js/dashboard.js"></script>
+        <script src="../assets/js/chart.js"></script>
         <!-- End custom js for this page -->
 
         <script type="text/javascript">
@@ -417,8 +462,8 @@ $PendingSalary=$row['sum(SalaryAmount)']-$row['sum(ReceivedAmount)'];
             var Year = document.getElementById("year").value;
             var ReceivedAmount=document.getElementById("FeesAmount").value;
             var Remark=document.getElementById("RemarkFees").value;
-
-
+            
+            
             if (StudentID!='' && BranchID !='' && TotalAmount!='' && ReceivedAmount!='' && Year!='' && Remark!='') {
               $.ajax({
                 type:'POST',
@@ -533,4 +578,4 @@ $PendingSalary=$row['sum(SalaryAmount)']-$row['sum(ReceivedAmount)'];
       </body>
       </html>
 
-      <?php  $con->close(); ?>
+      <?php   $con->close(); ?>

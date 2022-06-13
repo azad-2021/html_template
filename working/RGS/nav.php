@@ -91,28 +91,11 @@
           </a>
         </li>
         <li class="nav-item menu-items">
-          <a class="nav-link" href="pages/tables/basic-table.html">
+          <a class="nav-link" href="stafflist.php">
             <span class="menu-icon">
               <i class="mdi mdi-table-large"></i>
             </span>
-            <span class="menu-title">Staff</span>
-          </a>
-        </li>
-
-        <li class="nav-item menu-items">
-          <a class="nav-link" href="pages/charts/chartjs.html">
-            <span class="menu-icon">
-              <i class="mdi mdi-chart-bar"></i>
-            </span>
-            <span class="menu-title">Pending Fess</span>
-          </a>
-        </li>
-        <li class="nav-item menu-items">
-          <a class="nav-link" href="pages/icons/mdi.html">
-            <span class="menu-icon">
-              <i class="mdi mdi-contacts"></i>
-            </span>
-            <span class="menu-title">Pending Salary</span>
+            <span class="menu-title">Staff Details</span>
           </a>
         </li>
       </ul>

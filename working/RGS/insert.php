@@ -83,15 +83,10 @@ if (!empty($TotalAmount))
 $SalaryAmount=!empty($_POST['SalaryAmount'])?$_POST['SalaryAmount']:'';
 if (!empty($SalaryAmount))
 {
-  $Salary=!empty($_POST['Salary'])?$_POST['Salary']:'';
-  $StaffID=!empty($_POST['StaffID'])?$_POST['StaffID']:'';
-  $Month=!empty($_POST['Month'])?$_POST['Month']:'';
-  $Month=$Month.'-01';
-  $SalaryMonth=date('Y-m-d',strtotime($Month));
 
-  $sql = "INSERT INTO salarydetails (StaffID, SalaryOfMonth, SalaryAmount, ReceivedAmount, UpdatedByID, UpdatedDate)
-  VALUES ($StaffID, '$SalaryMonth', $SalaryAmount, $Salary, $userid, '$Date')";
+  $SID=!empty($_POST['SID'])?$_POST['SID']:'';
 
+  $sql = "UPDATE salarydetails SET ReceivedAmount=$SalaryAmount, UpdatedByID=$userid, UpdatedDate='$Date' WHERE ID=$SID";
   if ($con->query($sql) === TRUE) {
 
 
@@ -103,5 +98,8 @@ if (!empty($SalaryAmount))
 
   //echo $FeesMonth;
 }
+
+
+
 $con->close();
 ?>
