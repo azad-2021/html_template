@@ -89,7 +89,6 @@ if (!empty($SalaryAmount))
   $Month=$Month.'-01';
   $SalaryMonth=date('Y-m-d',strtotime($Month));
 
-
   $sql = "INSERT INTO salarydetails (StaffID, SalaryOfMonth, SalaryAmount, ReceivedAmount, UpdatedByID, UpdatedDate)
   VALUES ($StaffID, '$SalaryMonth', $SalaryAmount, $Salary, $userid, '$Date')";
 
@@ -104,31 +103,5 @@ if (!empty($SalaryAmount))
 
   //echo $FeesMonth;
 }
-
-
-$StudentIDAt=!empty($_POST['StudentIDAt'])?$_POST['StudentIDAt']:'';
-if (!empty($StudentIDAt))
-{
-  $Attendance=$_POST['Attendance'];
-
-  $Data="SELECT * from attendencedetails WHERE StudentID=$StudentIDAt and `Date`='$Date'";
-  $result=mysqli_query($con,$Data);
-  if (mysqli_num_rows($result)>0)
-  {  
-    $sql = "UPDATE attendencedetails SET AttendanceStatus=$Attendance WHERE StudentID=$StudentIDAt and `Date`='$Date'";
-
-  }else{
-
-    $sql = "INSERT INTO attendencedetails (StudentID, AttendanceStatus, UpdatedByID, `Date`)
-    VALUES ($StudentIDAt, $Attendance, $userid, '$Date')";
-  }
-  if ($con->query($sql) === TRUE) {
-    echo "New record created successfully";
-  } else {
-    echo "Error: " . $sql . "<br>" . $con->error;
-  }
-
-}
-
 $con->close();
 ?>

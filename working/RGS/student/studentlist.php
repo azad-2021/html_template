@@ -7,14 +7,12 @@ $timestamp =date('y-m-d H:i:s');
 $Date = date('Y-m-d',strtotime($timestamp));
 $userid=2;
 
-$query ="SELECT * FROM staff join coordinators on staff.StaffID=coordinators.StaffID
-WHERE staff.StaffID=$userid";
+$query ="SELECT * FROM staff WHERE StaffID=$userid";
 $result = mysqli_query($con, $query);
 $row=mysqli_fetch_assoc($result);
 $TotalLeave=$row['StaffLeave'];
 $TakenLeave=$row['TakenLeave'];
 $BranchID=$row['BranchID'];
-$Year=$row['Year'];
 
 ?>
 
@@ -46,7 +44,7 @@ $Year=$row['Year'];
 
   <style type="text/css">
 
-</style>
+  </style>
 </head>
 <body>
   <div class="container-scroller">
@@ -74,15 +72,16 @@ $Year=$row['Year'];
                       <th>Sr. No</th>
                       <th>Student Name</th>
                       <th>Father's Name</th>
+                      <th>Gender</th>                 
+                      <th>Mobile</th>
+                      <th>Address</th>
                       <th>Lateral Entry</th>
                       <th>Attendance</th>
                     </tr>
                   </thead>
                   <tbody>
                     <?php 
-                    $query ="SELECT * FROM students
-                    join student_year on students.StudentID=student_year.StudentID
-                    WHERE BranchID=$BranchID and Passout=0 and Year=$Year";
+                    $query ="SELECT * FROM students WHERE BranchID=$BranchID and Passout=0";
 
                     $result = mysqli_query($con, $query);
                     if (mysqli_num_rows($result)>0){
@@ -99,14 +98,11 @@ $Year=$row['Year'];
                           <td><?php echo $sr; ?></td>
                           <td><?php echo $row['StudentName']; ?></td>
                           <td><?php echo $row['FatherName'];?></td>
+                          <td><?php echo $row['Gender']?></td>
+                          <td><?php echo $row['MobileNo']?></td>
+                          <td><?php echo $row['Address']?></td>
                           <td><?php echo $Lateral?></td>
-                          <td>
-                            <select style="color: white" class="form-control" id="at" id2="<?php echo $row['StudentID']; ?>">
-                              <option value="">Select</option>
-                              <option value="1">Present</option>
-                              <option value="0">Absent</option>
-                            </select>
-                          </td>
+                          <td><input type="checkbox" id="<?php echo $row['StudentID']; ?>" name="" value="1"></td>
                         </tr>
                       <?php }} ?>
                     </tbody>
@@ -355,25 +351,6 @@ $Year=$row['Year'];
         $('#BranchIDF').html('<option value="">Branch</option>'); 
       }
 
-    });
-
-
-    $(document).on('change', '#at', function(){
-      var StudentID=$(this).attr("id2");
-      var Attendance=$(this).val();
-      console.log(StudentID);
-      if (StudentID) {
-        $.ajax({
-          type:'POST',
-          url:'insert.php',
-          data:{'StudentIDAt':StudentID, "Attendance":Attendance},
-          success:function(result){
-            //$('#FeesStudent').html(result);
-            console.log((result));
-            swal("success","Attendance updated","success");
-          }
-        });
-      }
     });
 
   </script>

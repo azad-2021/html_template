@@ -5,10 +5,10 @@ $(function() {
    */
    'use strict';
    var data = {
-    labels: ["Polytechnic", "B.Tech", "B.Pharma", "D.Phrama"],
+    labels: Course,
     datasets: [{
       label: 'Pending Fees',
-      data: [1200, 1900, PendingBPharma, 500],
+      data: PendingFees,
       backgroundColor: [
       'rgba(255, 99, 132, 0.2)',
       'rgba(54, 162, 235, 0.2)',
@@ -44,10 +44,10 @@ $(function() {
 
 
 var data2 = {
-    labels: ["Polytechnic", "B.Tech", "B.Pharma", "D.Phrama"],
+    labels: CourseAttendance,
     datasets: [{
-      label: 'Pending Fees',
-      data: [60, 70, 80, 70],
+      label: 'Student Attendance',
+      data: Attendance,
       backgroundColor: [
       'rgba(255, 99, 132, 0.2)',
       'rgba(54, 162, 235, 0.2)',

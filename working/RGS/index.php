@@ -191,22 +191,25 @@ if (isset($_POST['SaveStudent'])) {
 
 }
 
-$query ="SELECT count(StudentID), sum(CourseAmount), sum(ReceivedAmount) FROM students WHERE Passout=0";
-$result = mysqli_query($con, $query);
-$row=mysqli_fetch_assoc($result);
-$NoStudents=$row['count(StudentID)'];
-$PendingFees=$row['sum(CourseAmount)']-$row['sum(ReceivedAmount)'];
 $query ="SELECT count(StaffID) FROM staff WHERE Inservice=1";
 $result = mysqli_query($con, $query);
 $row=mysqli_fetch_assoc($result);
 $NoStaff=$row['count(StaffID)'];
 
-$query ="SELECT count(StudentID), sum(CourseAmount), sum(ReceivedAmount) FROM students WHERE Passout=0 and BranchID=7";
+$query ="SELECT count(StudentID), sum(CourseAmount), sum(ReceivedAmount), Course FROM students JOIN branchs on students.BranchID=branchs.BranchID join courses on branchs.CourseID=courses.CourseID WHERE Passout=0 GROUP BY courses.CourseID order by Course";
 $result = mysqli_query($con, $query);
-$row=mysqli_fetch_assoc($result);
-$NoStudents=$row['count(StudentID)'];
-$PendingFeesBPharma=$row['sum(CourseAmount)']-$row['sum(ReceivedAmount)'];
 
+$NoStudentsArray=array();
+$PendingFeesArray=array();
+while($row=mysqli_fetch_assoc($result)){
+  $NoStudentsArray[]=$row['count(StudentID)'];
+  $PendingFeesArray[]=$row['sum(CourseAmount)']-$row['sum(ReceivedAmount)'];
+  $PF=$row['sum(CourseAmount)']-$row['sum(ReceivedAmount)'];
+  $data[]=array("Course"=>$row['Course'], "PendingFees"=>$PF);
+}
+
+$NoStudents=array_sum($NoStudentsArray);
+$PendingFees=array_sum($PendingFeesArray);
 $query ="SELECT sum(salarydetails.SalaryAmount), sum(salarydetails.ReceivedAmount), StaffName FROM salarydetails
 join staff on salarydetails.StaffID=staff.StaffID
 WHERE Inservice=1 GROUP BY salarydetails.StaffID";
@@ -221,6 +224,26 @@ while($row=mysqli_fetch_assoc($result)){
 }
 
 $PendingSalary=array_sum($PendingSalaryArray);
+
+
+
+
+$query ="SELECT COUNT(attendencedetails.StudentID) as TotalStudent, Course, courses.CourseID FROM `attendencedetails` join students on attendencedetails.StudentID=students.StudentID JOIN branchs on students.BranchID=branchs.BranchID join courses on branchs.CourseID=courses.CourseID WHERE Passout=0 GROUP BY courses.CourseID order by Course";
+$result = mysqli_query($con, $query);
+
+$NoStudentsArray=array();
+$PendingFeesArray=array();
+while($row=mysqli_fetch_assoc($result)){
+  $CourseID=$row['CourseID'];
+
+  $query2 ="SELECT COUNT(attendencedetails.StudentID) as Present FROM `attendencedetails` join students on attendencedetails.StudentID=students.StudentID JOIN branchs on students.BranchID=branchs.BranchID join courses on branchs.CourseID=courses.CourseID WHERE Passout=0 and AttendanceStatus=1 and courses.CourseID=$CourseID";
+  $result2 = mysqli_query($con, $query2);
+  $row2=mysqli_fetch_assoc($result2);
+
+  $Attendance=($row2['Present']/$row['TotalStudent'])*100;
+  $data2[]=array("Course"=>$row['Course'], "Attendance"=>$Attendance);
+}
+
 ?>
 
 <!DOCTYPE html>
@@ -248,11 +271,11 @@ $PendingSalary=array_sum($PendingSalaryArray);
   <link rel="shortcut icon" href="assets/images/favicon.png" />
   <script src="assets/js/sweetalert.min.js"></script>
   <style type="text/css">
-    input, textarea{
-      color: white;
-    }
+  input, textarea{
+    color: white;
+  }
 
-  </style>
+</style>
 </head>
 <body>
   <div class="container-scroller">
@@ -494,7 +517,28 @@ $PendingSalary=array_sum($PendingSalaryArray);
 
         </div>
         <script type="text/javascript">
-          var PendingBPharma=<?php echo $PendingFeesBPharma ?>
+          var data= <?php print_r(json_encode($data)); ?>;
+
+          var Course = [];
+          var PendingFees = [];
+          console.log(Course.length);
+
+          for(var i = 0; i < data.length; i++) {
+            Course.push(data[i].Course);
+            PendingFees.push(data[i].PendingFees);
+          }
+
+          var data2= <?php print_r(json_encode($data2)); ?>;
+
+          var CourseAttendance = [];
+          var Attendance = [];
+
+
+          for(var i = 0; i < data2.length; i++) {
+            CourseAttendance.push(data2[i].Course);
+            Attendance.push(data2[i].Attendance);
+          }
+
         </script>
 
         <script src="assets/vendors/js/vendor.bundle.base.js"></script>
@@ -761,7 +805,7 @@ $(document).on('click', '.SaveSalary', function(){
   }
 });
 
- $(document).on('click', '.cl', function(){
+$(document).on('click', '.cl', function(){
 
   var delayInMilliseconds = 1000; 
 
