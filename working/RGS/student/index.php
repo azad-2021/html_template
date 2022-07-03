@@ -1,63 +1,62 @@
 <?php 
 
 include"connection.php";
-
+include"session.php";
 date_default_timezone_set('Asia/Calcutta');
 $timestamp =date('y-m-d H:i:s');
 $Date = date('Y-m-d',strtotime($timestamp));
-$userid=3;
+$userid=$_SESSION['userid'];
 $TakenLeave=0;
 
+$Hour = date('G');
 
-if (isset($_POST['SaveLeave'])) {
-  $Description=$_POST['Description'];
-  $SDate=$_POST['SDate'];
-  $EDate=$_POST['EDate'];
-
-  $sql = "INSERT INTO LeaveApplication (StaffID, Description, StartDate, EndDate, ApplyDate)
-  VALUES ($userid, '$Description', '$SDate', '$EDate', '$timestamp')";
-
-  if ($con->query($sql) === TRUE) {
-
-    $query ="SELECT TakenLeave FROM `staff` WHERE StaffID=$userid";
-    $result2 = mysqli_query($con, $query);
-    $arr=mysqli_fetch_assoc($result2);
-    $Taken=$arr['TakenLeave'];
-    $interval = date_diff(date_create($SDate), date_create($EDate));
-    $d= $interval->format('%R%a');
-    $int = (int)$d;   
-    $TakenLeave=$int+$Taken;
-
-    $sql = "UPDATE staff SET TakenLeave=$TakenLeave WHERE StaffID=$userid";
-    if ($con->query($sql) === TRUE) {
-
-      echo '<script>alert("Leave applied successfully")</script>';
-      echo "<meta http-equiv='refresh' content='0'>";
-    }else {
-      echo "Error: " . $sql . "<br>" . $con->error;
-    }
-  } else {
-    echo "Error: " . $sql . "<br>" . $con->error;
-  }
+if ( $Hour >= 1 && $Hour <= 11 ) {
+  $wish= "Good Morning ".$_SESSION['user'];
+} else if ( $Hour >= 12 && $Hour <= 15 ) {
+  $wish= "Good Afternoon ".$_SESSION['user'];
+} else if ( $Hour >= 19 || $Hour <= 23 ) {
+  $wish= "Good Evening ".$_SESSION['user'];
 }
 
 
-$query ="SELECT * FROM staff WHERE StaffID=$userid";
-$result = mysqli_query($con, $query);
-$row=mysqli_fetch_assoc($result);
-$TotalLeave=$row['StaffLeave'];
-$TakenLeave=$row['TakenLeave'];
-$BranchID=$row['BranchID'];
 
-$query ="SELECT count(StudentID) FROM students WHERE BranchID=$BranchID and Passout=0";
-$result = mysqli_query($con, $query);
-$row=mysqli_fetch_assoc($result);
-$NoStudents=$row['count(StudentID)'];
 
-$query ="SELECT sum(SalaryAmount), sum(ReceivedAmount) FROM salarydetails WHERE StaffID=$userid";
+
+$query ="SELECT COUNT(StudentID) FROM `attendencedetails` WHERE StudentID=$userid";
 $result = mysqli_query($con, $query);
 $row=mysqli_fetch_assoc($result);
-$PendingSalary=$row['sum(SalaryAmount)']-$row['sum(ReceivedAmount)'];
+$TotalWorking=$row['COUNT(StudentID)'];
+
+$query ="SELECT COUNT(StudentID) FROM `attendencedetails` WHERE AttendanceStatus=1 and StudentID=$userid;";
+$result = mysqli_query($con, $query);
+$row=mysqli_fetch_assoc($result);
+$Present=$row['COUNT(StudentID)'];
+
+if ($TotalWorking==0) {
+  $Attendance=0;
+}else{
+  $Attendance=($Present/$TotalWorking)*100;
+  $Attendance=number_format((float)$Attendance, 2, '.', '');
+}
+$query ="SELECT * FROM students WHERE StudentID=$userid";
+$result = mysqli_query($con, $query);
+$row=mysqli_fetch_assoc($result);
+$TotalFees=$row['CourseAmount'];
+$PendingFees=$row['CourseAmount']-$row['ReceivedAmount'];
+
+$AtData=array();
+$AtDate=array();
+$query ="SELECT AttendanceStatus, `Date` FROM u241098585_college_demo.attendencedetails WHERE StudentID=$userid order by `Date` desc Limit 7";
+$result = mysqli_query($con, $query);
+if (mysqli_num_rows($result)>0)
+{   
+
+  while ($row=mysqli_fetch_assoc($result))
+  {
+    $AtData[]=$row['AttendanceStatus'];
+    $AtDate[]=date('d-M-Y',strtotime($row['Date']));
+  }
+}
 ?>
 
 <!DOCTYPE html>
@@ -85,11 +84,11 @@ $PendingSalary=$row['sum(SalaryAmount)']-$row['sum(ReceivedAmount)'];
   <link rel="shortcut icon" href="../assets/images/favicon.png" />
   <script src="../assets/js/sweetalert.min.js"></script>
   <style type="text/css">
-  input, textarea{
-    color: white;
-  }
+    input, textarea{
+      color: white;
+    }
 
-</style>
+  </style>
 </head>
 <body>
   <div class="container-scroller">
@@ -106,14 +105,13 @@ $PendingSalary=$row['sum(SalaryAmount)']-$row['sum(ReceivedAmount)'];
       ?>
       <div class="content-wrapper">
         <div class="row">
-
-          <div class="col-xl-6 col-sm-6 grid-margin stretch-card">
+          <div class="col-xl-4 col-sm-6 grid-margin stretch-card">
             <div class="card">
               <div class="card-body">
                 <div class="row">
                   <div class="col-9">
                     <div class="d-flex align-items-center align-self-start">
-                      <h3 class="mb-0"><?php echo '20 %'; ?></h3>
+                      <h3 class="mb-0"><?php echo $Attendance.' %'; ?></h3>
                     </div>
                   </div>
                   <div class="col-3">
@@ -122,18 +120,37 @@ $PendingSalary=$row['sum(SalaryAmount)']-$row['sum(ReceivedAmount)'];
                     </div>
                   </div>
                 </div>
-                <h6 class="text-muted font-weight-normal">Attendance (%)</h6>
+                <h6 class="text-muted font-weight-normal">Attendance</h6>
               </div>
             </div>
           </div>
 
-          <div class="col-xl-6 col-sm-6 grid-margin stretch-card">
+          <div class="col-xl-4 col-sm-6 grid-margin stretch-card">
             <div class="card">
               <div class="card-body">
                 <div class="row">
                   <div class="col-9">
                     <div class="d-flex align-items-center align-self-start">
-                      <h3 class="mb-0"><i class="mdi mdi-currency-inr"></i><?php echo $PendingSalary; ?></h3>
+                      <h3 class="mb-0"><i class="mdi mdi-currency-inr"></i><?php echo $TotalFees; ?></h3>
+                    </div>
+                  </div>
+                  <div class="col-3">
+                    <div class="icon icon-box-success">
+                      <span class="mdi mdi-poll icon-item"></span>
+                    </div>
+                  </div>
+                </div>
+                <h6 class="text-muted font-weight-normal">Total Fees</h6>
+              </div>
+            </div>
+          </div>
+          <div class="col-xl-4 col-sm-6 grid-margin stretch-card">
+            <div class="card">
+              <div class="card-body">
+                <div class="row">
+                  <div class="col-9">
+                    <div class="d-flex align-items-center align-self-start">
+                      <h3 class="mb-0"><i class="mdi mdi-currency-inr"></i><?php echo $PendingFees; ?></h3>
                     </div>
                   </div>
                   <div class="col-3">
@@ -148,6 +165,19 @@ $PendingSalary=$row['sum(SalaryAmount)']-$row['sum(ReceivedAmount)'];
           </div>
         </div>
 
+
+        <div class="row">
+          <div class="col-lg-12 grid-margin stretch-card">
+            <div class="card">
+              <div class="card-body">
+                <h4 class="card-title">Your Attendance (Last 7 days)</h4>
+                <canvas id="PercentageAttandance" style="height:230px"></canvas>
+              </div>
+            </div>
+          </div>
+        </div>
+
+
         <div class="row">
           <div class="col-xl-12">
             <h4>Fees Status</h4>
@@ -155,13 +185,14 @@ $PendingSalary=$row['sum(SalaryAmount)']-$row['sum(ReceivedAmount)'];
               <table class="table">
                 <thead>
                   <th>Sr No</th>
-                  <th>Month</th>
-                  <th>Release Date</th>
-                  <th>Amount</th>
+                  <th>Fees Amount</th>
+                  <th>Submit Date</th>
+                  <th>Receipt No</th>
+                  <th>Remark</th>
                 </thead>
                 <tbody>
-                  <?php 
-                  $query="SELECT * from salarydetails WHERE StaffID=$userid";
+                  <?php
+                  $query="SELECT * FROM feesdetails WHERE StudentID=$userid";
 
                   $result = mysqli_query($con, $query);
                   if (mysqli_num_rows($result)>0){
@@ -175,9 +206,10 @@ $PendingSalary=$row['sum(SalaryAmount)']-$row['sum(ReceivedAmount)'];
                       $Sr++;
                       print "<tr>";
                       print '<td>'.$Sr."</td>";
-                      print '<td>'.date('M-Y',strtotime($row['SalaryOfMonth']))."</td>";
-                      print '<td>'.$UpdateDate."</td>";
                       print '<td>'.$row['ReceivedAmount']."</td>";
+                      print '<td>'.$UpdateDate."</td>";
+                      print '<td>'.$row['ReceiptNo']."</td>";
+                      print '<td>'.$row['Remark']."</td>";
                       print "</tr>";
                     }
                   }?>
@@ -200,7 +232,10 @@ $PendingSalary=$row['sum(SalaryAmount)']-$row['sum(ReceivedAmount)'];
       </div>
 
     </div>
-
+    <script type="text/javascript">
+      var AtDate= <?php print_r(json_encode($AtDate)); ?>;
+      var AtData= <?php print_r(json_encode($AtData)); ?>;
+    </script>
     <script src="../assets/vendors/js/vendor.bundle.base.js"></script>
     <!-- endinject -->
     <!-- Plugin js for this page -->
@@ -221,6 +256,7 @@ $PendingSalary=$row['sum(SalaryAmount)']-$row['sum(ReceivedAmount)'];
     <!-- endinject -->
     <!-- Custom js for this page -->
     <script src="../assets/js/dashboard.js"></script>
+    <script src="js/chart.js"></script>
     <!-- End custom js for this page -->
 
     <script type="text/javascript">
@@ -414,4 +450,5 @@ $PendingSalary=$row['sum(SalaryAmount)']-$row['sum(ReceivedAmount)'];
   </body>
   </html>
 
-  <?php  $con->close(); ?>
+  <?php //echo $TotalWorking;
+  $con->close(); ?>

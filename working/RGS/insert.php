@@ -99,7 +99,65 @@ if (!empty($SalaryAmount))
   //echo $FeesMonth;
 }
 
+$ApplicationID=!empty($_POST['ApplicationID'])?$_POST['ApplicationID']:'';
+if (!empty($ApplicationID))
+{
 
+  $Type=!empty($_POST['Type'])?$_POST['Type']:'';
+  $StaffIDleave=!empty($_POST['StaffIDleave'])?$_POST['StaffIDleave']:'';
+  if ($Type=='Accept') {
+    $Type=1;
+    
+  }else{
+    $Type=2;
+  }
+
+  $sql = "UPDATE LeaveApplication SET Status=$Type WHERE ApplicationID=$ApplicationID";
+  if ($con->query($sql) === TRUE) {
+
+  } else {
+    echo "Error: " . $sql . "<br>" . $con->error;
+  }
+
+  $query="SELECT count(ApplicationID) from LeaveApplication WHERE Status=1 and StaffID=$StaffIDleave";
+
+  $result = mysqli_query($con, $query);
+  $row=mysqli_fetch_assoc($result);
+  $Accepted=$row['count(ApplicationID)'];
+  $sql = "UPDATE staff SET TakenLeave=$Accepted WHERE StaffID=$StaffIDleave";
+  
+  if ($con->query($sql) === TRUE) {
+
+  } else {
+    echo "Error: " . $sql . "<br>" . $con->error;
+  }
+}
+
+
+$YearCoordinator=!empty($_POST['YearCoordinator'])?$_POST['YearCoordinator']:'';
+if (!empty($YearCoordinator))
+{
+  $StaffCoordinator=!empty($_POST['StaffCoordinator'])?$_POST['StaffCoordinator']:'';
+  
+  $Data="SELECT * from u241098585_college_demo.coordinators WHERE StaffID=$StaffCoordinator";
+  $result=mysqli_query($con,$Data);
+  if (mysqli_num_rows($result)>0)
+  {  
+
+    $sql = "UPDATE u241098585_college_demo.coordinators SET Year=$YearCoordinator WHERE StaffID=$StaffCoordinator";
+
+  }else{
+
+    $sql = "INSERT INTO u241098585_college_demo.coordinators (StaffID, Year)
+    VALUES ($StaffCoordinator, $YearCoordinator)";
+  }
+  if ($con->query($sql) === TRUE) {
+
+  }else {
+    echo "Error: " . $sql . "<br>" . $con->error;
+  }
+
+}
 
 $con->close();
 ?>

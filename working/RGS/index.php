@@ -1,12 +1,25 @@
+
 <?php 
 
 include"connection.php";
-
+include"session.php";
 date_default_timezone_set('Asia/Calcutta');
 $timestamp =date('y-m-d H:i:s');
 $Date = date('Y-m-d',strtotime($timestamp));
 $Day = date('d',strtotime($timestamp));
+$userid=$_SESSION['userid'];
 $TakenLeave=0;
+$data=array();
+$data2=array();
+$Hour = date('G');
+
+if ( $Hour >= 1 && $Hour <= 11 ) {
+  $wish= "Good Morning ".$_SESSION['user'];
+} else if ( $Hour >= 12 && $Hour <= 15 ) {
+  $wish= "Good Afternoon ".$_SESSION['user'];
+} else if ( $Hour >= 19 || $Hour <= 23 ) {
+  $wish= "Good Evening ".$_SESSION['user'];
+}
 
 //echo $Date;
 if ($Day==1) {
@@ -45,9 +58,6 @@ if ($Day==1) {
   }
 }
 
-
-
-$userid=1;
 
 if (isset($_POST['SaveStaff'])) {
   $Name=$_POST['StaffName'];
@@ -172,15 +182,29 @@ if (isset($_POST['SaveStudent'])) {
 
     if (empty($lateral)==true) {
       $lateral=0;
+      $Year=1;
+    }else{
+      $Year=2;
     }
 
     $sql = "INSERT INTO students (StudentName, BranchID, Gender, FatherName, MotherName, AadharCardNo, MobileNo,  Address, LateralEntry, CourseAmount, Password, Remark, RegistrationDate, RegisteredByID )
     VALUES ('$Name', $BranchID, '$Gender', '$Father', '$Mother', '$Aadhar', '$Mobile', '$Address', $lateral, $Amount, 'demo@123', '$Remark', '$Date', $userid)";
 
     if ($con->query($sql) === TRUE) {
+      $last_id = $con->insert_id;
       $Upload=move_uploaded_file($file_tmp,"student_pic/".$file);
-      echo '<script>alert("Student added successfully")</script>';
-      echo "<meta http-equiv='refresh' content='0'>";
+
+      $sql = "INSERT INTO u241098585_college_demo.student_year (StudentID, Year )
+      VALUES ($last_id, $Year)";
+
+      if ($con->query($sql) === TRUE) {
+
+        echo '<script>alert("Student added successfully")</script>';
+        //sleep(5);
+        echo "<meta http-equiv='refresh' content='0'>";
+      }else {
+        echo "Error: " . $sql . "<br>" . $con->error;
+      }
     } else {
       echo "Error: " . $sql . "<br>" . $con->error;
     }
@@ -217,6 +241,7 @@ WHERE Inservice=1 GROUP BY salarydetails.StaffID";
 $StaffArray=array();
 $PendingSalaryArray=array();
 $PendingSalary=0;
+
 $result = mysqli_query($con, $query);
 while($row=mysqli_fetch_assoc($result)){
   $StaffArray[]=$row['StaffName'];
@@ -226,13 +251,12 @@ while($row=mysqli_fetch_assoc($result)){
 $PendingSalary=array_sum($PendingSalaryArray);
 
 
-
-
 $query ="SELECT COUNT(attendencedetails.StudentID) as TotalStudent, Course, courses.CourseID FROM `attendencedetails` join students on attendencedetails.StudentID=students.StudentID JOIN branchs on students.BranchID=branchs.BranchID join courses on branchs.CourseID=courses.CourseID WHERE Passout=0 GROUP BY courses.CourseID order by Course";
 $result = mysqli_query($con, $query);
 
 $NoStudentsArray=array();
 $PendingFeesArray=array();
+
 while($row=mysqli_fetch_assoc($result)){
   $CourseID=$row['CourseID'];
 
@@ -271,11 +295,11 @@ while($row=mysqli_fetch_assoc($result)){
   <link rel="shortcut icon" href="assets/images/favicon.png" />
   <script src="assets/js/sweetalert.min.js"></script>
   <style type="text/css">
-  input, textarea{
-    color: white;
-  }
+    input, textarea{
+      color: white;
+    }
 
-</style>
+  </style>
 </head>
 <body>
   <div class="container-scroller">
@@ -409,38 +433,8 @@ while($row=mysqli_fetch_assoc($result)){
                       <th> Action </th>
                     </tr>
                   </thead>
-                  <tbody>
-                    <?php 
-                    $query="SELECT * from LeaveApplication 
-                    join staff on LeaveApplication.StaffID=staff.StaffID
-                    WHERE Inservice=1";
+                  <tbody id="LeaveData">
 
-                    $result = mysqli_query($con, $query);
-                    if (mysqli_num_rows($result)>0){
-                      $Sr=0;
-                      while($row=mysqli_fetch_assoc($result)){
-                        if ($row['Status']==0) {
-                          $Status='<div class="badge badge-outline-warning">Pending</div>';
-                        }elseif($row['Status']==1){
-                          $Status='<div class="badge badge-outline-success">Approved</div>';
-                        }elseif($row['Status']==2){
-                          $Status='<div class="badge badge-outline-danger">Rejected</div>';
-                        }
-                        $Sr++;
-                        print "<tr>";
-                        print '<td>'.$Sr."</td>";
-                        print '<td>'.$row['StaffName']."</td>";
-                        print '<td>'.$row['ApplicationID']."</td>";
-                        print '<td>'.$row['Description']."</td>";
-                        print '<td>'.date('d-m-Y',strtotime($row['StartDate'])).' to '.date('d-m-Y',strtotime($row['EndDate']))."</td>";
-                        print '<td>'.$row['StaffLeave']."</td>";
-                        print '<td>'.$row['TakenLeave']."</td>";
-                        print '<td>'.$Status."</td>";
-                        print '<td>'.date('d-m-Y',strtotime($row['ApplyDate']))."</td>";
-                        print '<td><button class="btn btn-primary">Accept</button> <button class="btn btn-danger"> Reject</button></td>';
-                        print "</tr>";
-                      }
-                    }?>
                   </tbody>
                 </table>
               </div>
@@ -565,6 +559,17 @@ while($row=mysqli_fetch_assoc($result)){
         <!-- End custom js for this page -->
 
         <script type="text/javascript">
+
+          $(document).ready(function () {
+            $.ajax({
+              type:'POST',
+              url:'read.php',
+              data:{'LeaveDetails':'LeaveDetails'},
+              success:function(result){
+                $('#LeaveData').html(result);
+              }
+            }); 
+          });
 
           $(document).on('change', '#BranchIDF', function(){
             var BranchID=$(this).val();
@@ -815,6 +820,114 @@ $(document).on('click', '.cl', function(){
 
 
 });
+
+
+$(document).on('click', '.LeaveAction', function(){
+
+  var ApplicationID=$(this).attr("id");
+  var Type=$(this).attr("id2");
+  var StaffID=$(this).attr("id3");
+
+  if (ApplicationID) {
+    $.ajax({
+      type:'POST',
+      url:'insert.php',
+      data:{'ApplicationID':ApplicationID, 'Type':Type, 'StaffIDleave':StaffID},
+      success:function(result){
+        swal("success","Leave Status Updated","success"); 
+      }
+    });
+
+    var delayInMilliseconds = 1000; 
+
+    setTimeout(function() {
+
+      $.ajax({
+        type:'POST',
+        url:'read.php',
+        data:{'LeaveDetails':'LeaveDetails'},
+        success:function(result){
+          $('#LeaveData').html(result);
+        }
+      });
+
+    }, delayInMilliseconds);
+
+  }else{
+    swal("error","Please enter salary release amount","error");
+  }
+});
+
+$(document).on('change', '#CODAddCourse', function(){
+  var CourseID= $(this).val();
+
+  if(CourseID){
+    $.ajax({
+      type:'POST',
+      url:'search.php',
+      data:{'CourseIDF':CourseID},
+      success:function(result){
+        $('#CODAddBanch').html(result);
+      }
+    }); 
+  }else{
+    $('#CODAddBanch').html('<option value="">Branch</option>'); 
+  }
+
+});
+
+
+$(document).on('change', '#CODAddBanch', function(){
+  var BranchID=$(this).val();
+  
+  if (BranchID) {
+    $.ajax({
+      type:'POST',
+      url:'read.php',
+      data:{'BranchIDS':BranchID},
+      success:function(result){
+        $('#StaffIDCOD').html(result);
+      }
+    });
+    
+  }else{
+
+    $('#StaffIDCOD').html('<option value="">Staff</option>'); 
+  }
+});
+
+$(document).on('change', '#StaffIDCOD', function(){
+  var ID=$(this).val();
+  if (ID) {
+    document.getElementById("CODYear").disabled = false;
+  }else{
+    document.getElementById("CODYear").disabled = true;
+  }
+});
+
+
+$(document).on('change', '#CODYear', function(){
+  var Year=$(this).val();
+  var StaffID=document.getElementById("StaffIDCOD").value;
+  
+  if (StaffID=='') {
+    swal("error","Please select staff","error")
+  }else if(StaffID!='' && Year!=''){
+    $.ajax({
+      type:'POST',
+      url:'insert.php',
+      data:{'YearCoordinator':Year, 'StaffCoordinator':StaffID},
+      success:function(result){
+        //$('#StaffIDCOD').html(result);
+        $('#CoordinatorForm').trigger("reset");
+        swal("success","Updated","success")
+      }
+    });
+
+  }
+});
+
+
 </script>
 
 </body>

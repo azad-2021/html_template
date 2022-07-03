@@ -2,11 +2,21 @@
 
 include"connection.php";
 
+include"session.php";
 date_default_timezone_set('Asia/Calcutta');
 $timestamp =date('y-m-d H:i:s');
 $Date = date('Y-m-d',strtotime($timestamp));
-$userid=1;
+$userid=$_SESSION['userid'];
 
+$Hour = date('G');
+
+if ( $Hour >= 1 && $Hour <= 11 ) {
+  $wish= "Good Morning ".$_SESSION['user'];
+} else if ( $Hour >= 12 && $Hour <= 15 ) {
+  $wish= "Good Afternoon ".$_SESSION['user'];
+} else if ( $Hour >= 19 || $Hour <= 23 ) {
+  $wish= "Good Evening ".$_SESSION['user'];
+}
 
 ?>
 
@@ -36,9 +46,8 @@ $userid=1;
   <script src="assets/js/sweetalert.min.js"></script>
 
 
-  <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.12.1/css/jquery.dataTables.min.css">
-  <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/searchpanes/2.0.1/css/searchPanes.dataTables.min.css">
-  <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/select/1.4.0/css/select.dataTables.min.css">
+  <link rel="stylesheet" type="text/css" href="datatable/css/jquery.dataTables.min.css">
+  <link rel="stylesheet" type="text/css" href="datatable/css/dataTables.bootstrap5.min.css">
 
   <style type="text/css">
 
@@ -95,9 +104,8 @@ $userid=1;
                 </form>
 
                 <div class="table-responsive" style="margin:20px;">
-                  <table class="table table-hover table-bordered border-primary table-light">
+                  <table class="table table-hover table-bordered border-primary table-light" id="example">
                     <thead>
-                      <th>Sr. No</th>
                       <th>Staff Name</th>
                       <th>Gender</th>    
                       <th>Aadhaar Card</th>                      
@@ -157,28 +165,12 @@ $userid=1;
 <script src="assets/js/dashboard.js"></script>
 <!-- End custom js for this page -->
 
-<script src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>
-<script src="https://cdn.datatables.net/searchpanes/2.0.1/js/dataTables.searchPanes.min.js"></script>
-<script src="https://cdn.datatables.net/select/1.4.0/js/dataTables.select.min.js"></script>
+<script src="datatable/js/jquery.dataTables.min.js"></script>
+<script src="datatable/js/dataTables.bootstrap5.min.js"></script>
 
 <script type="text/javascript">
 
-  $(document).ready(function() {
-    $('#example').DataTable({
-      searchPanes: {
-        layout: 'columns-6'
-      },
-      dom: 'Plfrtip',
-      columnDefs: [
-      {
-        searchPanes: {
-          show: true
-        },
-        targets: [3, 4, 5,9,10,12]
-      }
-      ]
-    });
-  });
+
 
   $(document).on('change', '#CourseIDSt', function(){
     var CourseID= $(this).val();
@@ -207,7 +199,10 @@ $userid=1;
         url:'read.php',
         data:{'BranchIDSta':BranchID},
         success:function(result){
+          $('#example').DataTable().clear();
+          $('#example').DataTable().destroy();
           $('#StaffData').html(result);
+          $('#example').DataTable();
         }
       }); 
     }

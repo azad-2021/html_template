@@ -13,8 +13,8 @@
                 <span class="count bg-success"></span>
               </div>
               <div class="profile-name">
-                <h5 class="mb-0 font-weight-normal">ABC</h5>
-                <span>Admin</span>
+                <h5 class="mb-0 font-weight-normal"><?php echo $_SESSION['user']; ?></h5>
+                <span><?php echo $_SESSION['usertype']; ?></span>
               </div>
             </div>
           </div>
@@ -42,7 +42,7 @@
             <ul class="nav flex-column sub-menu">
               <li class="nav-item"> <a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#Registration">Student</a></li>
               <li class="nav-item"> <a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#AddStaff">Staff</a></li>
-              
+              <li class="nav-item"> <a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#Coordinator">Add Coordinator</a></li>
             </ul>
           </div>
         </li>
@@ -113,7 +113,7 @@
           </button>
           <ul class="navbar-nav w-100">
             <li class="nav-item w-100">
-              <h4>Good Morning ABC</h4>
+              <h4><?php echo $wish; ?></h4>
             </li>
           </ul>
           <ul class="navbar-nav navbar-nav-right">
@@ -128,7 +128,7 @@
               <a class="nav-link" id="profileDropdown" href="#" data-bs-toggle="dropdown">
                 <div class="navbar-profile">
                   <img class="img-xs rounded-circle" src="assets/images/faces/face15.jpg" alt="">
-                  <p class="mb-0 d-none d-sm-block navbar-profile-name">ABC</p>
+                  <p class="mb-0 d-none d-sm-block navbar-profile-name"><?php echo $_SESSION['user']; ?></p>
                   <i class="mdi mdi-menu-down d-none d-sm-block"></i>
                 </div>
               </a>
@@ -146,7 +146,7 @@
                   </div>
                 </a>
                 <div class="dropdown-divider"></div>
-                <a class="dropdown-item preview-item">
+                <a class="dropdown-item preview-item" href="logout.php">
                   <div class="preview-thumbnail">
                     <div class="preview-icon bg-dark rounded-circle">
                       <i class="mdi mdi-logout text-danger"></i>

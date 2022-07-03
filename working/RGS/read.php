@@ -146,7 +146,6 @@ if (!empty($BranchIDSt))
           $Sr++;
           ?>
           <tr>
-            <td><?php echo $Sr ?></td>
             <td><?php echo $row['StudentName']; ?></td>
             <td><?php echo $row['FatherName'];?></td>
             <td><?php echo $row['MotherName']?></td>
@@ -160,9 +159,19 @@ if (!empty($BranchIDSt))
             <td><?php echo $row['CourseAmount']-$row['ReceivedAmount']?></td>
             <td><?php echo $row['RegistrationDate']?></td>
             <td><?php echo $row['Remark']?></td>
-            <td><button class="btn btn-primary FeesDetails" id="<?php echo $row['StudentID']?>" data-bs-toggle="modal" data-bs-target="#FeesDetails">View Fees Details </button> <button class="btn btn-primary Attendance">View Attendance</button></td>
-        </tr>
-    <?php }
+            <td>
+              <div class="dropdown">
+                <button class="btn btn-lg btn-info dropdown-toggle btn-rounded btn-md" type="button" id="dropdownMenuButton6" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Action</button>
+                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton6" style="background: #B172D8;">
+
+                    <a class="dropdown-item FeesDetails" style="background: #B172D8;" href="#" id="<?php echo $row['StudentID']?>" data-bs-toggle="modal" data-bs-target="#FeesDetails">Fees Details</a>
+
+                    <a class="dropdown-item" href="#" style="background: #B172D8;">Attendance Details</a>
+                </div>
+            </div>
+        </td>
+    </tr>
+<?php }
 }
 }
 
@@ -209,7 +218,6 @@ if (!empty($BranchIDSta))
 
           ?>
           <tr>
-            <td><?php echo $Sr ?></td>
             <td><?php echo $row['StaffName']; ?></td>
             <td><?php echo $row['Gender']?></td>
             <td><?php echo $row['AadharCardNo']?></td>
@@ -221,7 +229,7 @@ if (!empty($BranchIDSta))
             <td><?php echo $row2['sum(SalaryAmount)']-$row2['sum(ReceivedAmount)']?></td>
             <td><?php echo $row['StaffLeave']?></td>
             <td><?php echo $row['TakenLeave']?></td>
-            <td><?php echo $row['EntryDate']?></td>
+            <td><?php echo date('d-M-Y',strtotime($row['EntryDate']));?></td>
             <td><button class="btn btn-primary SalaryDetailsS" id="<?php echo $row['StaffID']?>" data-bs-toggle="modal" data-bs-target="#SalaryDetail">View Salary Details </button></td>
         </tr>
     <?php }
@@ -237,19 +245,63 @@ if (!empty($StaffIDSalary))
     if(mysqli_num_rows($result)>0)
     {
        while($row = mysqli_fetch_array($result)){
-            if (!empty($row['UpdatedDate'])) {
-                $UpdateDate=date('d-m-Y',strtotime($row['UpdatedDate']));
-            }else{
-                $UpdateDate='';
-            }
-           print "<tr>";
-           print '<td>'.$row['ReceivedAmount']."</td>";
-           print '<td>'.date('M-Y',strtotime($row['SalaryOfMonth']))."</td>";
-           print '<td>'.$UpdateDate."</td>";
-           print "</tr>";
-       }
-   }
+        if (!empty($row['UpdatedDate'])) {
+            $UpdateDate=date('d-M-Y',strtotime($row['UpdatedDate']));
+        }else{
+            $UpdateDate='';
+        }
+        print "<tr>";
+        print '<td>'.$row['ReceivedAmount']."</td>";
+        print '<td>'.date('M-Y',strtotime($row['SalaryOfMonth']))."</td>";
+        print '<td>'.$UpdateDate."</td>";
+        print "</tr>";
+    }
+}
 
 }
 
+$LeaveDetails=!empty($_POST['LeaveDetails'])?$_POST['LeaveDetails']:'';
+if (!empty($LeaveDetails))
+{
+    $query="SELECT * from LeaveApplication 
+    join staff on LeaveApplication.StaffID=staff.StaffID
+    WHERE Inservice=1";
+
+    $result = mysqli_query($con, $query);
+    if (mysqli_num_rows($result)>0){
+      $Sr=0;
+      while($row=mysqli_fetch_assoc($result)){
+        if ($row['Status']==0) {
+          $Status='<div class="badge badge-outline-warning">Pending</div>';
+      }elseif($row['Status']==1){
+          $Status='<div class="badge badge-outline-success">Approved</div>';
+      }elseif($row['Status']==2){
+          $Status='<div class="badge badge-outline-danger">Rejected</div>';
+      }
+      $Sr++;
+      print "<tr>";
+      print '<td>'.$Sr."</td>";
+      print '<td>'.$row['StaffName']."</td>";
+      print '<td>'.$row['ApplicationID']."</td>";
+      print '<td>'.$row['Description']."</td>";
+      print '<td>'.date('d-M-Y',strtotime($row['StartDate'])).' to '.date('d-M-Y',strtotime($row['EndDate']))."</td>";
+      print '<td>'.$row['StaffLeave']."</td>";
+      print '<td>'.$row['TakenLeave']."</td>";
+      print '<td>'.$Status."</td>";
+      print '<td>'.date('d-m-Y',strtotime($row['ApplyDate']))."</td>";
+      print '<td>
+      <div class="dropdown">
+      <button class="btn btn-lg btn-info dropdown-toggle btn-rounded btn-md" type="button" id="dropdownMenuButton6" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Action</button>
+      <div class="dropdown-menu" aria-labelledby="dropdownMenuButton6" style="background: #B172D8;">
+
+      <a class="dropdown-item LeaveAction" style="background: #B172D8;" id="'.$row['ApplicationID'].'" id2="Accept" id3="'.$row['StaffID'].'">Accept</a>
+
+      <a class="dropdown-item LeaveAction" style="background: #B172D8;" id="'.$row['ApplicationID'].'" id2="Reject" id3="'.$row['StaffID'].'">Reject</a>
+      </div>
+      </div>
+      </td>';
+      print "</tr>";
+  }
+}
+}
 ?>

@@ -1,5 +1,12 @@
 <?php
 include ('connection.php');
+include ('session.php');
+
+date_default_timezone_set('Asia/Calcutta');
+$timestamp =date('y-m-d H:i:s');
+$Date = date('Y-m-d',strtotime($timestamp));
+$userid=$_SESSION['userid'];
+
 $subjectlist=!empty($_POST['subjectlist'])?$_POST['subjectlist']:'';
 if (!empty($subjectlist))
 {
@@ -82,4 +89,63 @@ if (!empty($StaffID))
     }
     
 }
+
+$Studentlist=!empty($_POST['Studentlist'])?$_POST['Studentlist']:'';
+if (!empty($Studentlist))
+{
+    $Year=$_POST['Year'];
+    $BranchID=$_POST['Branch'];
+    $query ="SELECT * FROM students
+    join student_year on students.StudentID=student_year.StudentID
+    WHERE BranchID=$BranchID and Passout=0 and Year=$Year";
+
+    $result = mysqli_query($con, $query);
+    if (mysqli_num_rows($result)>0){
+
+      while($row=mysqli_fetch_assoc($result)){
+
+        if ($row['LateralEntry']==1) {
+          $Lateral='Yes';
+      }else{
+          $Lateral='No';
+      }
+      $StudentID=$row['StudentID'];
+      
+
+      $query="SELECT * FROM u241098585_college_demo.attendencedetails WHERE StudentID=$StudentID and `Date`='$Date'";
+      $result2 = mysqli_query($con, $query);
+      if (mysqli_num_rows($result2)>0){
+        $row2=mysqli_fetch_assoc($result2);
+
+        if ($row2['AttendanceStatus']==1) {
+            $Today='Present';
+            $tr='<tr class="table-success">';
+        }else{
+            $Today='Absent';
+            $tr='<tr class="table-danger">';
+        }
+      }else{
+        $Today='Not Taken';
+        $tr='<tr class="table-primary">';
+      }
+      echo $tr;
+      ?>
+      
+
+          <td><?php echo $row['StudentName']; ?></td>
+          <td><?php echo $row['FatherName'];?></td>
+          <td><?php echo $Lateral?></td>
+          <td><?php echo $Today; ?></td>
+          <td>
+            <select style="color: white" class="form-control" id="at" id2="<?php echo $row['StudentID']; ?>">
+              <option value="">Select</option>
+              <option value="1">Present</option>
+              <option value="0">Absent</option>
+          </select>
+      </td>
+  </tr>
+<?php }
+}
+} 
+
 ?>
