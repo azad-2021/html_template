@@ -36,7 +36,9 @@ if (isset($_POST['SaveLeave'])) {
     $d= $interval->format('%R%a');
     $int = (int)$d;   
     $TakenLeave=$int+$Taken;
-
+    if ($TakenLeave==0) {
+      $TakenLeave=1;
+    }
     $sql = "UPDATE staff SET TakenLeave=$TakenLeave WHERE StaffID=$userid";
     if ($con->query($sql) === TRUE) {
 

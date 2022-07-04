@@ -287,21 +287,27 @@ if (!empty($LeaveDetails))
       print '<td>'.date('d-M-Y',strtotime($row['StartDate'])).' to '.date('d-M-Y',strtotime($row['EndDate']))."</td>";
       print '<td>'.$row['StaffLeave']."</td>";
       print '<td>'.$row['TakenLeave']."</td>";
-      print '<td>'.$Status."</td>";
       print '<td>'.date('d-m-Y',strtotime($row['ApplyDate']))."</td>";
-      print '<td>
-      <div class="dropdown">
-      <button class="btn btn-lg btn-info dropdown-toggle btn-rounded btn-md" type="button" id="dropdownMenuButton6" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Action</button>
-      <div class="dropdown-menu" aria-labelledby="dropdownMenuButton6" style="background: #B172D8;">
+      print '<td>'.$Status."</td>";
+      
+      if ($row['Status']==0) {
 
-      <a class="dropdown-item LeaveAction" style="background: #B172D8;" id="'.$row['ApplicationID'].'" id2="Accept" id3="'.$row['StaffID'].'">Accept</a>
+          print '<td>
+          <div class="dropdown">
+          <button class="btn btn-lg btn-info dropdown-toggle btn-rounded btn-md" type="button" id="dropdownMenuButton6" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Action</button>
+          <div class="dropdown-menu" aria-labelledby="dropdownMenuButton6" style="background: #B172D8;">
 
-      <a class="dropdown-item LeaveAction" style="background: #B172D8;" id="'.$row['ApplicationID'].'" id2="Reject" id3="'.$row['StaffID'].'">Reject</a>
-      </div>
-      </div>
-      </td>';
-      print "</tr>";
-  }
+          <a class="dropdown-item LeaveAction" style="background: #B172D8;" id="'.$row['ApplicationID'].'" id2="Accept" id3="'.$row['StaffID'].'">Accept</a>
+
+          <a class="dropdown-item LeaveAction" style="background: #B172D8;" id="'.$row['ApplicationID'].'" id2="Reject" id3="'.$row['StaffID'].'">Reject</a>
+          </div>
+          </div>
+          </td>';
+      }else{
+        print '<td></td>';
+    }
+    print "</tr>";
+}
 }
 }
 ?>

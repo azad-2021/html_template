@@ -355,19 +355,21 @@ $Year=$row['Year'];
             //swal("success","Attendance updated","success");
           }
         });
+      var delayInMilliseconds = 1000; 
 
-      $.ajax({
-        type:'POST',
-        url:'read.php',
-        data:{'Studentlist':'subjectlist', 'Year':Year, 'Branch':BranchIDS},
-        success:function(result){
-          $('#example').DataTable().clear();
-          $('#example').DataTable().destroy();
-          $('#StudentData').html(result);
-          $('#example').DataTable();
-        }
-      });
-
+      setTimeout(function() {
+        $.ajax({
+          type:'POST',
+          url:'read.php',
+          data:{'Studentlist':'subjectlist', 'Year':Year, 'Branch':BranchIDS},
+          success:function(result){
+            $('#example').DataTable().clear();
+            $('#example').DataTable().destroy();
+            $('#StudentData').html(result);
+            $('#example').DataTable();
+          }
+        });
+      }, delayInMilliseconds);
     }
   });
 

@@ -934,5 +934,5 @@ $(document).on('change', '#CODYear', function(){
 </html>
 
 <?php
-echo $PendingSalary;
+//echo $PendingSalary;
 $con->close(); ?>
