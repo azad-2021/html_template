@@ -157,7 +157,7 @@ if (!empty($BranchIDSt))
             <td><?php echo $row['CourseAmount']?></td>
             <td><?php echo $row['ReceivedAmount']?></td>
             <td><?php echo $row['CourseAmount']-$row['ReceivedAmount']?></td>
-            <td><?php echo $row['RegistrationDate']?></td>
+            <td><?php echo date('d-m-Y',strtotime($row['RegistrationDate']))?></td>
             <td><?php echo $row['Remark']?></td>
             <td>
               <div class="dropdown">

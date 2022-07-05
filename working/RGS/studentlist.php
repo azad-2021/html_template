@@ -367,69 +367,10 @@ if ( $Hour >= 1 && $Hour <= 11 ) {
 
 <script src="datatable/js/jquery.dataTables.min.js"></script>
 <script src="datatable/js/dataTables.bootstrap5.min.js"></script>
-
+<script src="ajax.js"></script>
 <script type="text/javascript">
 
 
-
-
-  $(document).on('change', '#CourseIDSt', function(){
-    var CourseID= $(this).val();
-    console.log(CourseID);
-    if(CourseID){
-      $.ajax({
-        type:'POST',
-        url:'search.php',
-        data:{'CourseID':CourseID},
-        success:function(result){
-          $('#BranchIDSt').html(result);
-        }
-      }); 
-    }else{
-      $('#BranchIDSt').html('<option value="">Branch</option>'); 
-    }
-
-  });
-
-  $(document).on('change', '#BranchIDSt', function(){
-    var BranchID= $(this).val();
-
-    if(BranchID){
-      $.ajax({
-        type:'POST',
-        url:'read.php',
-        data:{'BranchIDSt':BranchID},
-        success:function(result){
-          $('#example').DataTable().clear();
-          $('#example').DataTable().destroy();
-          $('#StudentData').html(result);
-          $('#example').DataTable();
-        }
-      }); 
-    }
-
-  });
-
-
-
-  $(document).on('click', '.FeesDetails', function(){
-
-    var StudentID=$(this).attr("id");
-    var delayInMilliseconds = 1000; 
-
-    setTimeout(function() {
-      if (StudentID) {
-        $.ajax({
-          type:'POST',
-          url:'read.php',
-          data:{'StudentIDFees':StudentID},
-          success:function(result){
-            $('#FeesData').html(result);
-          }
-        });
-      }
-    }, delayInMilliseconds)
-  });
 
 
 
