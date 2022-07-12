@@ -64,9 +64,9 @@
           <svg class="svg-icon svg-icon-sm svg-icon-heavy me-xl-2">
             <use xlink:href="#browser-window-1"> </use>
           </svg>Find</a>
-          <ul class="collapse list-unstyled " id="exampledropdownDropdown">
-            <li><a class="sidebar-link" href="#">Item</a></li>
-            <li><a class="sidebar-link" href="#">Bill</a></li>
+          <ul class="collapse list-unstyled" id="exampledropdownDropdown">
+            <li><a class="sidebar-link" href="" data-bs-toggle="modal" data-bs-target="#FindItems">Item</a></li>
+            <li><a class="sidebar-link" href="" data-bs-toggle="modal" data-bs-target="#FindBill">Bill</a></li>
           </ul>
         </li>
       </ul>
@@ -114,11 +114,9 @@
             <use xlink:href="#quality-1"> </use>
           </svg>All Bills</a>
         </li>
-
       </ul>
-
-
     </nav>
+
     <div class="page">
       <!-- navbar-->
       <header class="header">
@@ -231,14 +229,66 @@
                             </select>
                           </div>
                           <div class="col-lg-3">
-                            <label>Select Item Category</label>
-                             <input type="number" min=0 class="form-control" name="SellingRate" id="SellingRate">
+                            <label>Selling Rate</label>
+                            <input type="number" min=0 class="form-control" name="SellingRate" id="SellingRate">
                           </div>
                         </div>
                       </div>
                       <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                         <button type="button" class="btn btn-primary">Save</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="modal fade" id="FindItems" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                  <div class="modal-dialog">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h5 class="modal-title" id="staticBackdropLabel">Find Items</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                      </div>
+                      <div class="modal-body">
+
+                        <div class="row">
+                          <center>
+                            <div class="col-lg-6">
+                              <label>Enter Item Name</label>
+                              <input type="text" class="form-control" name="FindItem" id="FindItem">
+                            </div>
+                          </center>
+                        </div>
+                      </div>
+                      <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary">Search</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="modal fade" id="FindBill" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                  <div class="modal-dialog">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h5 class="modal-title" id="staticBackdropLabel">Find Bill</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                      </div>
+                      <div class="modal-body">
+
+                        <div class="row">
+                          <center>
+                            <div class="col-lg-6">
+                              <label>Enter invoice number</label>
+                              <input type="text" class="form-control" name="FindBill" id="FindBill">
+                            </div>
+                          </center>
+                        </div>
+                      </div>
+                      <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary">Search</button>
                       </div>
                     </div>
                   </div>
