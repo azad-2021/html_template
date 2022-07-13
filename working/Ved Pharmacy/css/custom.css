@@ -1,1 +1,11 @@
-/* your styles go here */
+input{
+	text-align: center;
+	border: 2px solid black;
+	border-radius: 20px;
+}
+
+select{
+	text-align: center;
+	border: 2px solid black;
+	border-radius: 20px;
+}
