@@ -9,3 +9,7 @@ select{
 	border: 2px solid black;
 	border-radius: 20px;
 }
+
+th, td{
+	text-align: center;
+}

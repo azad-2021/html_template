@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>Bootstrap Dashboard by Bootstrapious.com</title>
+    <title>Ved Pharmacy Login</title>
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="robots" content="all,follow">
@@ -31,10 +31,9 @@
             <div class="card">
               <div class="card-body p-5">
                 <header class="text-center mb-5">
-                  <h1 class="text-xxl text-gray-400 text-uppercase">Bootstrap<strong class="text-primary">Dashboard</strong></h1>
-                  <p class="text-gray-500 fw-light">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud.</p>
+                  <h1 class="text-xxl text-gray-400 text-uppercase"><strong class="text-primary">Ved Pharmacy</strong></h1>
                 </header>
-                <form class="login-form" method="get" action="index.html">
+                <form class="login-form" method="POST" action="">
                   <div class="row">
                     <div class="col-lg-7 mx-auto">
                       <div class="input-material-group mb-3">
@@ -47,8 +46,8 @@
                       </div>
                     </div>
                     <div class="col-12 text-center">       
-                      <button class="btn btn-primary mb-3" id="login" type="submit">Login</button><br><a class="text-xs text-paleBlue" href="#!">Forgot Password?  </a><br><span class="text-xs mb-0 text-gray-500">Do not have an account?  </span><a class="text-xs text-paleBlue ms-1" href="register.html"> Signup</a>
-                      <!-- This should be submit button but I replaced it with <a> for demo purposes-->
+                      <button class="btn btn-primary mb-3" id="login" type="submit">Login</button><br>
+                      <a class="text-xs text-paleBlue" href="#!">Forgot Password?  </a><br>                     
                     </div>
                   </div>
                 </form>
@@ -58,8 +57,7 @@
         </div>
       </div>
       <div class="text-center position-absolute bottom-0 start-0 w-100 z-index-20">
-        <p class="text-gray-500">Design by <a class="external" href="https://bootstrapious.com/p/admin-template">Bootstrapious</a>
-          <!-- Please do not remove the backlink to us unless you support further theme's development at https://bootstrapious.com/donate. It is part of the license conditions. Thank you for understanding :)                      -->
+        <p class="text-gray-500">Design and monitor by <a class="external" href="https://starlaboratories.in">STAR Laboratories</a>
         </p>
       </div>
     </div>
@@ -93,7 +91,7 @@
       // inject local SVG sprite (using only 'icons/orion-svg-sprite.svg' path)
       // while using file:// protocol
       // pls don't forget to change to your domain :)
-      injectSvgSprite('https://bootstraptemple.com/files/icons/orion-svg-sprite.svg'); 
+      injectSvgSprite('https://starlaboratories.in/files/icons/orion-svg-sprite.svg'); 
       
       
     </script>
