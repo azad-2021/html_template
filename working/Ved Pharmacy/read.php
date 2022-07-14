@@ -18,6 +18,15 @@ include"FindItem.php";
 }
 
 
+$ItemList=!empty($_POST['ItemList'])?$_POST['ItemList']:'';
+if (!empty($ItemList))
+{
+
+include"ItemListData.php";
+
+}
+
+
 $CategoryIDP=!empty($_POST['CategoryIDP'])?$_POST['CategoryIDP']:'';
 if (!empty($CategoryIDP))
 {

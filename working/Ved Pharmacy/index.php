@@ -1,6 +1,8 @@
 <?php include "connection.php";
 
-
+date_default_timezone_set('Asia/Calcutta');
+$timestamp =date('y-m-d H:i:s');
+$Date = date('Y-m-d',strtotime($timestamp));
 ?>
 
 <!DOCTYPE html>
@@ -23,7 +25,6 @@
       <!-- modals -->
       <?php include "modals.php"; ?>
       <!-- modal closed -->
-
 
       <div class="row">
         <!-- Count item widget-->
@@ -66,7 +67,6 @@
           </div>
         </div>
 
-
         <!-- Count item widget-->
         <div class="col-xl-3 col-md-4 col-6 gy-4 gy-xl-0">
           <div class="d-flex">
@@ -102,8 +102,6 @@
   <section class="bg-white py-5">
     <div class="container-fluid">
       <div class="row d-flex align-items-md-stretch">
-
-
         <!-- Line Chart -->
         <div class="col-lg-12 col-md-12">
           <div class="card shadow-0">
@@ -136,7 +134,6 @@
     <div class="container-fluid">
       <div class="row d-flex align-items-md-stretch">
 
-
         <!-- Line Chart -->
         <div class="col-lg-12 col-md-12">
           <div class="card shadow-0">
@@ -150,7 +147,46 @@
   <?php include "footer.php"; 
 
   ?>
+
+
+  <!-- JavaScript files-->
+  <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+  <script src="vendor/chart.js/Chart.min.js"></script>
+  <script src="vendor/just-validate/js/just-validate.min.js"></script>
+  <script src="vendor/choices.js/public/assets/scripts/choices.min.js"></script>
+  <script src="vendor/overlayscrollbars/js/OverlayScrollbars.min.js"></script>
+  <script src="js/charts-home.js"></script>
+  <!-- Main File-->
+  <script src="js/front.js"></script>
+
+
   <script type="text/javascript">
+    function injectSvgSprite(path) {
+
+      var ajax = new XMLHttpRequest();
+      ajax.open("GET", path, true);
+      ajax.send();
+      ajax.onload = function(e) {
+        var div = document.createElement("div");
+        div.className = 'd-none';
+        div.innerHTML = ajax.responseText;
+        document.body.insertBefore(div, document.body.childNodes[0]);
+      }
+    }
+// this is set to BootstrapTemple website as you cannot 
+// inject local SVG sprite (using only 'icons/orion-svg-sprite.svg' path)
+// while using file:// protocol
+// pls don't forget to change to your domain :)
+injectSvgSprite('https://bootstraptemple.com/files/icons/orion-svg-sprite.svg'); 
+</script>
+<!-- FontAwesome CSS - loading as last, so it doesn't block rendering-->
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.1/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+
+<?php 
+include "js-php.php";
+
+?>
+<script type="text/javascript">
 
 /*
     $.ajax({
@@ -194,6 +230,7 @@
     $('#AddCategoryF').trigger("reset");
     $('#AddItemsF').trigger("reset");
     $('#FindItemF').trigger("reset");
+    $('#AddPurchaseF').trigger("reset");
   });
 
 
@@ -403,6 +440,46 @@
     
   });
 
+
+  $(document).on('click', '.SavePurchase', function(){
+
+    var SellerID = document.getElementById("SellerID").value;
+    var ItemID = document.getElementById("ItemP").value;
+    var PurchaseRate = document.getElementById("PurchaseRate").value;
+    var Qty = document.getElementById("Qty").value;
+    var PurchaseDate = document.getElementById("PurchaseDate").value;
+    var Discount = document.getElementById("Discount").value;
+    var ItemExpiry = document.getElementById("ItemExpiry").value;
+    var Amount = document.getElementById("Amount").value;
+
+    var Page="insert.php";
+    var Modal='#AddPurchase';
+    var Form='#AddPurchaseF';
+    var Success='Purchase Added';
+
+    if (SellerID && ItemID && PurchaseRate && Qty && PurchaseDate && Discount && ItemExpiry && Amount) {
+      var data={'SellerID':SellerID, 'ItemID':ItemID, 'PurchaseRate':PurchaseRate, 'Qty':Qty, 'PurchaseDate':PurchaseDate, 'Discount':Discount, 'ItemExpiry':ItemExpiry, 'Amount':Amount};
+      AjaxPost(Page, data, Modal, Form, Success);
+    }else{
+      EmptyErrorAlert();
+    }
+    
+  });
+
+
+  $(document).on('change', '#CategoryInvoice', function(){
+
+    var CategoryID=$(this).val();
+
+    var Page="read.php";
+    var Modal='NA';
+    var Form='NA';
+    var Result='#ItemInvoice';
+    if (FindItem) {
+      var data={'CategoryIDP':CategoryID};
+      AjaxRead(Page, data, Modal, Form, Result);
+    }    
+  });
 </script>
 </body>
 </html>
