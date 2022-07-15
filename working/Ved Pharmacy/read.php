@@ -44,3 +44,15 @@ if (!empty($CategoryIDP))
     }
     
 }
+
+$ItemRate=!empty($_POST['ItemRate'])?$_POST['ItemRate']:'';
+if (!empty($ItemRate))
+{
+    $query="SELECT * from items WHERE ItemID=$ItemRate";
+    $result = mysqli_query($con,$query);
+    if(mysqli_num_rows($result)>0)
+    {   
+        $arr=mysqli_fetch_assoc($result);
+        echo $arr['SellingRate'];
+    }
+}

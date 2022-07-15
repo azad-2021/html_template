@@ -346,37 +346,45 @@
             </div>
 
             <div class="col-lg-6">
-              <label>Purchase MRP Rate</label>
-              <input type="number" min=0 class="form-control" name="PurchaseRate" id="PurchaseRate">
+              <label>MRP Rate</label>
+              <input type="text" min=0 class="form-control" name="SaleRate" id="SaleRate" disabled>
             </div>
             <div class="col-lg-6">
               <label>Quantity</label>
-              <input type="number" min=0 class="form-control" name="Qty" id="Qty">
-            </div>
-            <div class="col-lg-6">
-              <label>Purchase Date</label>
-              <input type="date" class="form-control" name="PurchaseDate" id="PurchaseDate">
-            </div>
-            <div class="col-lg-6">
-              <label>Amount</label>
-              <input type="number" min=0 class="form-control" name="Amount" id="Amount">
+              <input type="number" min=0 class="form-control" name="Qty" id="QtyInvoice">
             </div>
             <div class="col-lg-6">
               <label>Discount</label>
-              <input type="number" min=0 class="form-control" name="Discount" id="Discount">
+              <input type="number" min=0 class="form-control" name="Discount" id="DiscountInvoice">
             </div>
-            <center>
-              <div class="col-lg-6">
-                <label>Item Expiry Date</label>
-                <input type="date" class="form-control" min="<?php echo $Date; ?>" name="ItemExpiry" id="ItemExpiry">
-              </div>
-            </center>
+
+            <div class="col-lg-6">
+              <label>Item Expiry Date</label>
+              <input type="date" class="form-control" min="<?php echo $Date; ?>" name="ItemExpiryInvoice" id="ItemExpiryInvoice">
+            </div>
+
           </div>
         </form>
+        <table class="table table-hover table-bordered border-primary table-responsive" style="margin: 20px;">
+          <thead>
+            <th>Sr No.</th>
+            <th>Item</th>
+            <th>Price</th>
+            <th>Quantity</th>
+            <th>Discount</th>
+            <th>Amount</th>
+            <th>Expiry Date</th>
+            <th>Action</th>
+          </thead>
+          <tbody id="BillData">
+            
+          </tbody>
+          
+        </table>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary close" data-bs-dismiss="modal">Close</button>
-        <button class="btn btn-primary add_button" onclick="javascript:void(0);">More items</button>
+        <button class="btn btn-primary AddInvoice">Add</button>
         <button type="button" class="btn btn-primary SaveItem">Save</button>
       </div>
     </div>

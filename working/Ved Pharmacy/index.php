@@ -292,8 +292,12 @@ include "js-php.php";
      method:"POST",
      data:Data,
      success:function(result){
-
-      $(Result).html(result);
+      console.log(Result);
+      if (Result=='SaleRate') {
+        document.getElementById(Result).value=(result);
+      }else{
+        $(Result).html(result);
+      }
       if (Modal!='NA') {
         $(Modal).modal("show");
       }
@@ -441,6 +445,22 @@ include "js-php.php";
   });
 
 
+
+  $(document).on('change', '#ItemInvoice', function(){
+
+    var ItemID=$(this).val();
+    var Page="read.php";
+    var Modal='NA';
+    var Form='NA';
+    var Result='SaleRate';
+    if (ItemID){
+      //console.log(ItemID);
+      var data={'ItemRate':ItemID};
+      AjaxRead(Page, data, Modal, Form, Result);
+    }    
+  });
+
+
   $(document).on('click', '.SavePurchase', function(){
 
     var SellerID = document.getElementById("SellerID").value;
@@ -480,6 +500,98 @@ include "js-php.php";
       AjaxRead(Page, data, Modal, Form, Result);
     }    
   });
+
+
+  // Node.js program to demonstrate the
+// Node.js filehandle.read() Method
+
+// Denotes total number of rows.
+var rowIdx = 0;
+
+// jQuery button click event to add a row.
+$('.AddInvoice').on('click', function () {
+
+  var ItemID=document.getElementById("ItemInvoice").value;
+  var SaleRate=document.getElementById("SaleRate").value;
+  var Qty=document.getElementById("QtyInvoice").value;
+  var Discount=document.getElementById("DiscountInvoice").value;
+  var ItemExpiry=document.getElementById("ItemExpiryInvoice").value;
+  console.log(Qty);
+  var SubAmount=SaleRate*Qty;
+  var Amount=SubAmount-((SubAmount*Discount)/100);
+
+  // Adding a row inside the tbody.
+  $('#BillData').append(`<tr id="R${++rowIdx}">
+
+    <td class="row-index text-center">
+    <p>${rowIdx}</p></td>
+
+    <td class="row-index text-center">
+    <p>${ItemID}</p></td>
+
+    <td class="row-index text-center">
+    <p>${SaleRate}</p></td>
+
+    <td class="row-index text-center">
+    <p>${Qty}</p></td>
+
+
+    <td class="row-index text-center">
+    <p>${Discount}</p></td>
+
+    <td class="row-index text-center">
+    <p>${Amount}</p></td>
+
+    <td class="row-index text-center">
+    <p>${ItemExpiry}</p></td>
+
+
+
+    <td class="text-center">
+    <button class="btn btn-danger remove"
+    type="button">Remove</button>
+    </td>
+    </tr>`);
+});
+
+
+// Node.js program to demonstrate the
+// Node.js filehandle.read() Method
+
+// jQuery button click event to remove a row
+$('#BillData').on('click', '.remove', function () {
+
+  // Getting all the rows next to the
+  // row containing the clicked button
+  var child = $(this).closest('tr').nextAll();
+
+  // Iterating across all the rows
+  // obtained to change the index
+  child.each(function () {
+
+    // Getting <tr> id.
+    var id = $(this).attr('id');
+
+    // Getting the <p> inside the .row-index class.
+    var idx = $(this).children('.row-index').children('p');
+
+    // Gets the row number from <tr> id.
+    var dig = parseInt(id.substring(1));
+
+    // Modifying row index.
+    idx.html(`Row ${dig - 1}`);
+
+    // Modifying row id.
+    $(this).attr('id', `R${dig - 1}`);
+  });
+
+  // Removing the current row.
+  $(this).closest('tr').remove();
+
+  // Decreasing the total number of rows by 1.
+  rowIdx--;
+});
+
 </script>
 </body>
 </html>
