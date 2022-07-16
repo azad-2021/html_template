@@ -514,11 +514,17 @@ $('.AddInvoice').on('click', function () {
   var ItemID=document.getElementById("ItemInvoice").value;
   var SaleRate=document.getElementById("SaleRate").value;
   var Qty=document.getElementById("QtyInvoice").value;
-  var Discount=document.getElementById("DiscountInvoice").value;
-  var ItemExpiry=document.getElementById("ItemExpiryInvoice").value;
+  var Discount=document.getElementById("Discount").value;
+  var ItemExpiry=document.getElementById("ItemExpiry").value;
   console.log(Qty);
   var SubAmount=SaleRate*Qty;
   var Amount=SubAmount-((SubAmount*Discount)/100);
+  <?php
+  echo $ExpDate = '<script>ItemExpiry</script>';
+  echo $ExpDate=date('d-M-Y',strtotime($ExpDate)); 
+  ?>
+  var ExpiryDate=<?php echo $ExpDate ?>;
+  if (ItemID && SaleRate && Qty && Discount && ItemExpiry && Amount) {
 
   // Adding a row inside the tbody.
   $('#BillData').append(`<tr id="R${++rowIdx}">
@@ -543,7 +549,7 @@ $('.AddInvoice').on('click', function () {
     <p>${Amount}</p></td>
 
     <td class="row-index text-center">
-    <p>${ItemExpiry}</p></td>
+    <p>${ExpiryDate}</p></td>
 
 
 
@@ -552,6 +558,11 @@ $('.AddInvoice').on('click', function () {
     type="button">Remove</button>
     </td>
     </tr>`);
+}else{
+  EmptyErrorAlert();
+
+}
+
 });
 
 
