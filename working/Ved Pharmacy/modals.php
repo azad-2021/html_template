@@ -276,6 +276,10 @@
               <input type="number" min=0 class="form-control" name="PurchaseRate" id="PurchaseRate">
             </div>
             <div class="col-lg-6">
+              <label>Available Quantity</label>
+              <input type="number" min=0 class="form-control" name="AvailableQty" id="AvailableQty">
+            </div>
+            <div class="col-lg-6">
               <label>Quantity</label>
               <input type="number" min=0 class="form-control" name="Qty" id="Qty">
             </div>
@@ -317,9 +321,20 @@
       </div>
       <div class="modal-body">
 
-        <form id="AddPurchaseF">
-          <div class="row">
 
+        <div class="row">
+
+          <div class="col-lg-6">
+            <label>Pateint Name</label>
+            <input type="text" class="form-control" name="Pateint" id="Pateint">
+          </div>
+          <div class="col-lg-6">
+            <label>Dr. Name</label>
+            <input type="text" min=0 class="form-control" name="DrName" id="DrName">
+          </div>
+        </div>
+        <form id="AddInvoiceF">
+          <div class="row">
             <div class="col-lg-6">
               <label>Select Category</label>
               <select class="form-select" id="CategoryInvoice">
@@ -360,9 +375,12 @@
 
             <div class="col-lg-6">
               <label>Item Expiry Date</label>
-              <input type="date" class="form-control" min="<?php echo $Date; ?>" name="ItemExpiryInvoice" id="ItemExpiryInvoice">
+              <input type="date" class="form-control" min="<?php echo $Date; ?>" name="ItemExpiryInvoice" id="ItemExpiryInvoice" disabled>
             </div>
-
+            <div class="col-lg-6">
+              <label>Item</label>
+              <input type="text" class="form-control d-none" name="Name" id="Name">
+            </div>
           </div>
         </form>
         <table class="table table-hover table-bordered border-primary table-responsive" style="margin: 20px;">
@@ -377,15 +395,15 @@
             <th>Action</th>
           </thead>
           <tbody id="BillData">
-            
+
           </tbody>
-          
+
         </table>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary close" data-bs-dismiss="modal">Close</button>
         <button class="btn btn-primary AddInvoice">Add</button>
-        <button type="button" class="btn btn-primary SaveItem">Save</button>
+        <button type="button" class="btn btn-primary GenerateInvoice">Save</button>
       </div>
     </div>
   </div>

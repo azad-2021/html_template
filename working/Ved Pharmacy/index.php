@@ -3,6 +3,29 @@
 date_default_timezone_set('Asia/Calcutta');
 $timestamp =date('y-m-d H:i:s');
 $Date = date('Y-m-d',strtotime($timestamp));
+
+function getdate_Date($DateFormat){
+
+  return date('d-M-Y',strtotime($DateFormat));;
+}
+
+
+$query="SELECT sum(Amount) FROM billing WHERE BillDate=curdate() and Cancelled=0";
+$result = mysqli_query($con,$query);
+$arr=mysqli_fetch_assoc($result);
+$BillToday=$arr['sum(Amount)'];
+
+$query="SELECT sum(Amount) FROM billing WHERE Cancelled=0";
+$result = mysqli_query($con,$query);
+$arr=mysqli_fetch_assoc($result);
+$BillTotal=$arr['sum(Amount)'];
+
+
+$query="SELECT sum(Qty-SaledQty) as Stock FROM purchase WHERE (Qty-SaledQty)>0;";
+$result = mysqli_query($con,$query);
+$arr=mysqli_fetch_assoc($result);
+$Stock=$arr['Stock'];
+
 ?>
 
 <!DOCTYPE html>
@@ -36,7 +59,7 @@ $Date = date('Y-m-d',strtotime($timestamp));
             <div class="ms-2">
               <h3 class="h4 text-dark text-uppercase fw-normal">Today Billing</h3>
               <p class="text-gray-500 small"></p>
-              <p class="display-6 mb-0">123</p>
+              <h3 class="mb-0">&#x20b9 <?php echo number_format($BillToday,2); ?></h3>
             </div>
           </div>
         </div>
@@ -49,7 +72,7 @@ $Date = date('Y-m-d',strtotime($timestamp));
             <div class="ms-2">
               <h3 class="h4 text-dark text-uppercase fw-normal">Total Billing</h3>
               <p class="text-gray-500 small"></p>
-              <p class="display-6 mb-0">123</p>
+              <h3 class="mb-0">&#x20b9 <?php echo number_format($BillTotal,2); ?></h3>
             </div>
           </div>
         </div>
@@ -60,9 +83,9 @@ $Date = date('Y-m-d',strtotime($timestamp));
               <use xlink:href="#literature-1"> </use>
             </svg>
             <div class="ms-2">
-              <h3 class="h4 text-dark text-uppercase fw-normal">Total items in stock</h3>
+              <h3 class="h4 text-dark text-uppercase fw-normal">Items in stock</h3>
               <p class="text-gray-500 small"></p>
-              <p class="display-6 mb-0">92</p>
+              <h3 class="mb-0"><?php echo $Stock; ?></h3>
             </div>
           </div>
         </div>
@@ -76,7 +99,7 @@ $Date = date('Y-m-d',strtotime($timestamp));
             <div class="ms-2">
               <h3 class="h4 text-dark text-uppercase fw-normal">Income current month</h3>
               <p class="text-gray-500 small"></p>
-              <p class="display-6 mb-0">92</p>
+              <h3 class="mb-0">&#x20b9 92</h3>
             </div>
           </div>
         </div>
@@ -90,7 +113,7 @@ $Date = date('Y-m-d',strtotime($timestamp));
             <div class="ms-2">
               <h3 class="h4 text-dark text-uppercase fw-normal">Total income</h3>
               <p class="text-gray-500 small"></p>
-              <p class="display-6 mb-0">92</p>
+              <h3 class="mb-0">&#x20b9 92</h3>
             </div>
           </div>
         </div>
@@ -188,6 +211,13 @@ include "js-php.php";
 ?>
 <script type="text/javascript">
 
+  var intervalId = window.setInterval(function(){
+    if(navigator.onLine){
+
+    } else {
+      alert('No internet connection!');
+    }
+  }, 5000);
 /*
     $.ajax({
      url:"insert.php",
@@ -214,6 +244,15 @@ include "js-php.php";
     }
   });*/
 
+  Array.prototype.contains = function(obj) {
+    var i = this.length;
+    while (i--) {
+      if (this[i] == obj) {
+        return true;
+      }
+    }
+    return false;
+  }
 
   function limit(element)
   {
@@ -243,6 +282,15 @@ include "js-php.php";
     })
   }
 
+  function ExistErr(){
+    Swal.fire({
+      title: 'Error!',
+      text: 'item already exist',
+      icon: 'error',
+      confirmButtonText: 'OK'
+    })
+  }
+
   function SuccessAlert(data){
     Swal.fire({
       title: 'success!',
@@ -262,13 +310,22 @@ include "js-php.php";
        method:"POST",
        data:Data,
        success:function(result){
+        alert(result);
 
-        if((result)==1){
+        if (Modal=='Billing') {
+          url='invoice.php?id='+(result);
+          window.open(url, "_blank");
+          var intervalId = window.setInterval(function(){
+            location.reload()
+          }, 1000);
+        }
+
+        if((result==1) && Modal!='Billing'){
           SuccessAlert(Success);
           $(Form).trigger("reset");
           $(Modal).modal("hide");
 
-        }else{
+        }else if (Modal!='Billing'){
 
           Swal.fire({
             title: 'Error!',
@@ -281,8 +338,8 @@ include "js-php.php";
       }
     });
 
-    }
 
+    }
   }
 
 
@@ -294,7 +351,13 @@ include "js-php.php";
      success:function(result){
       console.log(Result);
       if (Result=='SaleRate') {
-        document.getElementById(Result).value=(result);
+
+        const obj = JSON.parse(result);
+        Name = obj.ItemName;
+        SellingRate=obj.SellingRate;
+
+        document.getElementById(Result).value=(SellingRate);
+        document.getElementById("Name").value=(Name);
       }else{
         $(Result).html(result);
       }
@@ -341,7 +404,7 @@ include "js-php.php";
     }else{
       EmptyErrorAlert();
     }
-    
+
   });
 
   $(document).on('click', '.SaveCategory', function(){
@@ -359,7 +422,7 @@ include "js-php.php";
     }else{
       EmptyErrorAlert();
     }
-    
+
   });
 
 
@@ -384,7 +447,7 @@ include "js-php.php";
       var a = input[i];
       var b = input2[i];
       var c = input3[i];
-      
+
       if (a.value && b.value && c.value) {
         item.push(a.value);
         rate.push(b.value);  
@@ -404,7 +467,7 @@ include "js-php.php";
     }else{
       EmptyErrorAlert();
     }
-    
+
   });
 
 
@@ -424,7 +487,7 @@ include "js-php.php";
     }else{
       EmptyErrorAlert();
     }
-    
+
   });
 
   $(document).on('change', '#CategoryP', function(){
@@ -441,7 +504,7 @@ include "js-php.php";
     }else{
       EmptyErrorAlert();
     }
-    
+
   });
 
 
@@ -454,9 +517,12 @@ include "js-php.php";
     var Form='NA';
     var Result='SaleRate';
     if (ItemID){
+      document.getElementById('ItemExpiryInvoice').disabled = false;
       //console.log(ItemID);
       var data={'ItemRate':ItemID};
       AjaxRead(Page, data, Modal, Form, Result);
+    }else{
+      document.getElementById('ItemExpiryInvoice').disabled = true;
     }    
   });
 
@@ -483,7 +549,7 @@ include "js-php.php";
     }else{
       EmptyErrorAlert();
     }
-    
+
   });
 
 
@@ -495,11 +561,42 @@ include "js-php.php";
     var Modal='NA';
     var Form='NA';
     var Result='#ItemInvoice';
-    if (FindItem) {
+    if (CategoryID) {
       var data={'CategoryIDP':CategoryID};
       AjaxRead(Page, data, Modal, Form, Result);
     }    
   });
+
+  var DateErr=0;
+  $(document).on('change', '#ItemExpiryInvoice', function(){
+
+    var ExDate=$(this).val();
+    var ItemID=document.getElementById("ItemInvoice").value;
+
+    if (ExDate && ItemID) {
+      $.ajax({
+       url:"read.php",
+       method:"POST",
+       data:{'ExDate':ExDate, 'ItemIDEx':ItemID},
+       success:function(result){
+        if((result)==1){
+
+        }else{
+          DateErr=1;
+          Swal.fire({
+            title: 'Error!',
+            text: (result),
+            icon: 'error',
+            confirmButtonText: 'OK'
+          })
+
+        }
+      }
+    });
+    }
+
+  });
+
 
 
   // Node.js program to demonstrate the
@@ -509,60 +606,89 @@ include "js-php.php";
 var rowIdx = 0;
 
 // jQuery button click event to add a row.
+var ItemIDArray=[];
+var RateArray=[];
+var QtyArray=[];
+var AmountArray=[];
+var DiscountArray=[];
+var ExpArray=[];
+var a=0;
 $('.AddInvoice').on('click', function () {
 
   var ItemID=document.getElementById("ItemInvoice").value;
   var SaleRate=document.getElementById("SaleRate").value;
   var Qty=document.getElementById("QtyInvoice").value;
-  var Discount=document.getElementById("Discount").value;
-  var ItemExpiry=document.getElementById("ItemExpiry").value;
-  console.log(Qty);
+  var Discount=document.getElementById("DiscountInvoice").value;
+  var ItemExpiry=document.getElementById("ItemExpiryInvoice").value;
+  var ItemName=document.getElementById("Name").value;
+  //ItemIDArray.push(ItemID);
+
+  //console.log(SaleRate);
+  //console.log(Qty);
+  //console.log(Discount);
+  //console.log(ItemExpiry);
   var SubAmount=SaleRate*Qty;
   var Amount=SubAmount-((SubAmount*Discount)/100);
-  <?php
-  echo $ExpDate = '<script>ItemExpiry</script>';
-  echo $ExpDate=date('d-M-Y',strtotime($ExpDate)); 
-  ?>
-  var ExpiryDate=<?php echo $ExpDate ?>;
-  if (ItemID && SaleRate && Qty && Discount && ItemExpiry && Amount) {
 
-  // Adding a row inside the tbody.
-  $('#BillData').append(`<tr id="R${++rowIdx}">
+  if (ItemID && SaleRate && Qty && Discount && ItemExpiry && Amount && DateErr==0) {
 
-    <td class="row-index text-center">
-    <p>${rowIdx}</p></td>
-
-    <td class="row-index text-center">
-    <p>${ItemID}</p></td>
-
-    <td class="row-index text-center">
-    <p>${SaleRate}</p></td>
-
-    <td class="row-index text-center">
-    <p>${Qty}</p></td>
+    if (ItemIDArray.contains(ItemID)==true) {
+      ExistErr();
+    }else{
+      ItemIDArray.push(ItemID);
+      RateArray.push(SaleRate);
+      QtyArray.push(Qty);
+      AmountArray.push(Amount);
+      DiscountArray.push(Discount);
+      ExpArray.push(ItemExpiry);
+      console.log(ExpArray);
 
 
-    <td class="row-index text-center">
-    <p>${Discount}</p></td>
+      $('#BillData').append(`<tr id="R${++rowIdx}">
 
-    <td class="row-index text-center">
-    <p>${Amount}</p></td>
+        <td class="row-index text-center">
+        <p>${rowIdx}</p></td>
 
-    <td class="row-index text-center">
-    <p>${ExpiryDate}</p></td>
+        <td class="row-index text-center">
+        <p>${ItemName}</p></td>
+
+        <td class="row-index text-center">
+        <p>${SaleRate}</p></td>
+
+        <td class="row-index text-center">
+        <p>${Qty}</p></td>
+
+
+        <td class="row-index text-center">
+        <p>${Discount}</p></td>
+
+        <td class="row-index text-center">
+        <p>${Amount}</p></td>
+
+        <td class="row-index text-center">
+        <p>${ItemExpiry}</p></td>
 
 
 
-    <td class="text-center">
-    <button class="btn btn-danger remove"
-    type="button">Remove</button>
-    </td>
-    </tr>`);
-}else{
-  EmptyErrorAlert();
-
-}
-
+        <td class="text-center">
+        <button class="btn btn-danger remove"
+        type="button" id="${ItemID}">Remove</button>
+        </td>
+        </tr>`);
+      $('#AddInvoiceF').trigger("reset");
+    }
+  }else{
+    if (DateErr==1) {
+      Swal.fire({
+        title: 'Error!',
+        text: 'This item is not in purchase list with '+ItemExpiry+' expiry date',
+        icon: 'error',
+        confirmButtonText: 'OK'
+      })
+    }else{
+      EmptyErrorAlert();
+    }
+  }
 });
 
 
@@ -572,35 +698,50 @@ $('.AddInvoice').on('click', function () {
 // jQuery button click event to remove a row
 $('#BillData').on('click', '.remove', function () {
 
+
+  var delItem = $(this).attr("id");
+  console.log(delItem);
+  
+  const index = ItemIDArray.indexOf(delItem);
+  if (index > -1) {
+    ItemIDArray.splice(index, 1);
+    RateArray.splice(index, 1);
+    QtyArray.splice(index, 1);
+    AmountArray.splice(index, 1);
+    DiscountArray.splice(index, 1);
+    ExpArray.splice(index, 1);
+    console.log(ItemIDArray);
+
+  }
+  
+
   // Getting all the rows next to the
   // row containing the clicked button
   var child = $(this).closest('tr').nextAll();
 
-  // Iterating across all the rows
-  // obtained to change the index
-  child.each(function () {
 
-    // Getting <tr> id.
-    var id = $(this).attr('id');
-
-    // Getting the <p> inside the .row-index class.
-    var idx = $(this).children('.row-index').children('p');
-
-    // Gets the row number from <tr> id.
-    var dig = parseInt(id.substring(1));
-
-    // Modifying row index.
-    idx.html(`Row ${dig - 1}`);
-
-    // Modifying row id.
-    $(this).attr('id', `R${dig - 1}`);
-  });
 
   // Removing the current row.
   $(this).closest('tr').remove();
 
   // Decreasing the total number of rows by 1.
   rowIdx--;
+});
+
+$('.GenerateInvoice').on('click', function () {
+  var Page="insert.php";
+  var Modal='Billing';
+  var Form='NA';
+  var Success='Bill Generated';
+  var Patient= document.getElementById("Pateint").value;
+  var Doctor= document.getElementById("DrName").value;
+  if ( Doctor && Patient) {
+
+    var data={'ItemIDArray':ItemIDArray, 'RateArray':RateArray, 'QtyArray':QtyArray, 'AmountArray':AmountArray, 'DiscountArray':DiscountArray, 'ExpArray':ExpArray, 'Patient':Patient, 'Doctor':Doctor};
+    AjaxPost(Page, data, Modal, Form, Success);
+  }else{
+    EmptyErrorAlert();
+  }
 });
 
 </script>

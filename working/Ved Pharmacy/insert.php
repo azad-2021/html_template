@@ -1,4 +1,6 @@
+
 <?php 
+
 include "connection.php";
 
 $userid=1;
@@ -11,10 +13,10 @@ $m=date('m',strtotime($timestamp));
 $y=date('y',strtotime($timestamp));
 
 if ($m<=3) {
-  $FY=($y-1).'-'.$y;
+	$FY=($y-1).$y;
 
 }else{
-  $FY=$y.'-'.($y+1);
+	$FY=$y.($y+1);
 }
 
 
@@ -111,14 +113,14 @@ if (!empty($NewItem))
 
 
 	if ($err==0) {
-		
+
 		for ($i=0; $i < count($NewItem) ; $i++) { 
 
 			$sql = "INSERT INTO items (ItemName, SellingRate, CategoryID, UpdatedDate, UpdatedByID)
 			VALUES ('$NewItem[$i]', $SellingRate[$i], $Category[$i], '$Date', $userid)";
 
 			if ($con->query($sql) === TRUE) {
-				
+
 			} else {
 				echo "Error: " . $sql . "<br>" . $con->error;
 				$err=1;
@@ -146,7 +148,7 @@ if (!empty($PurchaseRate))
 	$Discount=!empty($_POST['Discount'])?$_POST['Discount']:'';
 	$ItemExpiry=!empty($_POST['ItemExpiry'])?$_POST['ItemExpiry']:'';
 	$Amount=!empty($_POST['Amount'])?$_POST['Amount']:'';
-	
+
 	$query="SELECT * from purchase WHERE SellerID=$SellerID and ItemID=$ItemID and PurchaseDate='PurchaseDate'";
 	$result = mysqli_query($con,$query);
 	if(mysqli_num_rows($result)>0)
@@ -164,6 +166,44 @@ if (!empty($PurchaseRate))
 		}
 
 	}
+}
+
+
+$ItemIDArray=!empty($_POST['ItemIDArray'])?$_POST['ItemIDArray']:'';
+if (!empty($ItemIDArray))
+{
+	$RateArray=$_POST['RateArray'];
+	$QtyArray=$_POST['QtyArray'];
+	$AmountArray=$_POST['AmountArray'];
+	$DiscountArray=$_POST['DiscountArray'];
+	$ExpArray=$_POST['ExpArray'];
+
+	$Patient=$_POST['Patient'];
+	$Doctor=$_POST['Doctor'];
+
+	$query="SELECT * from billing order by BillID desc Limit 1";
+	$result = mysqli_query($con,$query);
+	if(mysqli_num_rows($result)>0)
+	{
+		$arr=mysqli_fetch_assoc($result);
+		$ID=$arr['BillID']+1;
+		$InvoiceNo=$FY.'VP'.$ID;
+
+	}else{
+		$InvoiceNo=$FY.'VP1';
+	}
+	for ($i=0; $i < count($ItemIDArray); $i++) { 
+
+
+		$sql = "INSERT INTO billing (ItemID, Rate, Qty, Amount, Discount, BillDate, ExpiryDate, InvoiceNo, 	PateintName, DrName)
+		VALUES ($ItemIDArray[$i], $RateArray[$i], $QtyArray[$i], $AmountArray[$i], $DiscountArray[$i], '$Date', '$ExpArray[$i]', '$InvoiceNo', '$Patient', '$Doctor')";
+
+		if ($con->query($sql) === TRUE) {
+		} else {
+			echo "Error: " . $sql . "<br>" . $con->error;
+		}
+	}
+	echo $last_id = $con->insert_id;
 }
 
 
