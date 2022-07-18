@@ -275,10 +275,7 @@
               <label>Purchase MRP Rate</label>
               <input type="number" min=0 class="form-control" name="PurchaseRate" id="PurchaseRate">
             </div>
-            <div class="col-lg-6">
-              <label>Available Quantity</label>
-              <input type="number" min=0 class="form-control" name="AvailableQty" id="AvailableQty">
-            </div>
+
             <div class="col-lg-6">
               <label>Quantity</label>
               <input type="number" min=0 class="form-control" name="Qty" id="Qty">
@@ -365,6 +362,10 @@
               <input type="text" min=0 class="form-control" name="SaleRate" id="SaleRate" disabled>
             </div>
             <div class="col-lg-6">
+              <label>Available Quantity</label>
+              <input type="number" min=0 class="form-control" name="AvailableQty" id="AvailableQty" disabled>
+            </div>
+            <div class="col-lg-6">
               <label>Quantity</label>
               <input type="number" min=0 class="form-control" name="Qty" id="QtyInvoice">
             </div>
@@ -372,11 +373,12 @@
               <label>Discount</label>
               <input type="number" min=0 class="form-control" name="Discount" id="DiscountInvoice">
             </div>
-
-            <div class="col-lg-6">
-              <label>Item Expiry Date</label>
-              <input type="date" class="form-control" min="<?php echo $Date; ?>" name="ItemExpiryInvoice" id="ItemExpiryInvoice" disabled>
-            </div>
+            <center>
+              <div class="col-lg-6">
+                <label>Item Expiry Date</label>
+                <input type="date" class="form-control" min="<?php echo $Date; ?>" name="ItemExpiryInvoice" id="ItemExpiryInvoice" disabled>
+              </div>
+            </center>
             <div class="col-lg-6">
               <label>Item</label>
               <input type="text" class="form-control d-none" name="Name" id="Name">

@@ -52,7 +52,7 @@ if (!empty($ItemRate))
 {
     $query="SELECT ItemName, SellingRate, (Qty-SaledQty) as AvQty from items 
     join purchase on items.ItemID=purchase.ItemID
-    WHERE ItemID=$ItemRate";
+    WHERE items.ItemID=$ItemRate";
     $result = mysqli_query($con,$query);
     if(mysqli_num_rows($result)>0)
     {   

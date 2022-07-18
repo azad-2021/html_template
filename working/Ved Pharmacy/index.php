@@ -349,15 +349,18 @@ include "js-php.php";
      method:"POST",
      data:Data,
      success:function(result){
-      console.log(Result);
+      console.log(result);
       if (Result=='SaleRate') {
 
         const obj = JSON.parse(result);
         Name = obj.ItemName;
         SellingRate=obj.SellingRate;
+        AvQty=obj.AvQty;
 
         document.getElementById(Result).value=(SellingRate);
         document.getElementById("Name").value=(Name);
+        document.getElementById("AvailableQty").value=(AvQty);
+
       }else{
         $(Result).html(result);
       }
@@ -580,7 +583,7 @@ include "js-php.php";
        data:{'ExDate':ExDate, 'ItemIDEx':ItemID},
        success:function(result){
         if((result)==1){
-
+          DateErr=0;
         }else{
           DateErr=1;
           Swal.fire({
@@ -621,6 +624,7 @@ $('.AddInvoice').on('click', function () {
   var Discount=document.getElementById("DiscountInvoice").value;
   var ItemExpiry=document.getElementById("ItemExpiryInvoice").value;
   var ItemName=document.getElementById("Name").value;
+  var AvQtys=document.getElementById("AvailableQty").value;
   //ItemIDArray.push(ItemID);
 
   //console.log(SaleRate);
@@ -630,7 +634,7 @@ $('.AddInvoice').on('click', function () {
   var SubAmount=SaleRate*Qty;
   var Amount=SubAmount-((SubAmount*Discount)/100);
 
-  if (ItemID && SaleRate && Qty && Discount && ItemExpiry && Amount && DateErr==0) {
+  if (ItemID && SaleRate && Qty && Discount && ItemExpiry && Amount && DateErr==0 && Qty<=AvQtys) {
 
     if (ItemIDArray.contains(ItemID)==true) {
       ExistErr();
@@ -682,6 +686,13 @@ $('.AddInvoice').on('click', function () {
       Swal.fire({
         title: 'Error!',
         text: 'This item is not in purchase list with '+ItemExpiry+' expiry date',
+        icon: 'error',
+        confirmButtonText: 'OK'
+      })
+    }else if(Qty>AvQtys){
+      Swal.fire({
+        title: 'Error!',
+        text: 'Item quantity must be less than Available quantity',
         icon: 'error',
         confirmButtonText: 'OK'
       })

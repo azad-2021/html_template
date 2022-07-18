@@ -221,6 +221,7 @@ if(mysqli_num_rows($result)>0)
               print '<td>'.$row['Amount']."</td>";
               print '<td>'.date('d-M-Y',strtotime($row['ExpiryDate']))."</td>";
               print "<tr>";  
+              $Sr++;
             }
 
 
