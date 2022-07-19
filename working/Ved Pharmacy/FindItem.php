@@ -2,6 +2,7 @@
 
 $query="SELECT * from items
 join category on items.CategoryID=category.CategoryID
+JOIN purchase ON purchase.ItemID=items.ItemID
 WHERE ItemName like '$FindItem'";
 $result = mysqli_query($con,$query);
 if(mysqli_num_rows($result)>0)
@@ -11,6 +12,9 @@ if(mysqli_num_rows($result)>0)
 		<thead>
 			<th>Item Name</th>
 			<th>Sale Rate</th>
+			<th>Purchase Rate</th>
+			<th>In stock</th>
+			<th>Expiry Date</th>
 			<th>Category</th>
 		</thead>
 		<tbody>
@@ -23,6 +27,9 @@ if(mysqli_num_rows($result)>0)
 				//print '<td>'.$Sr."</td>";
 				print '<td>'.$row['ItemName']."</td>";
 				print '<td>'.$row['SellingRate']."</td>";
+				print '<td>'.$row['PurchaseRate']."</td>";
+				print '<td>'.$row['Qty']-$row['SaledQty']."</td>";
+				print '<td><span class="d-none">'.$row['ExpiryDate'].'</span>'.date('d-M-Y',strtotime($row['ExpiryDate']))."</td>";
 				print '<td>'.$row['Category']."</td>";
 				print "<tr>";  
 			}

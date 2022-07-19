@@ -4,9 +4,16 @@ $Company='Ved Pharmacy';
 date_default_timezone_set('Asia/Calcutta');
 $timestamp =date('y-m-d H:i:s');
 $Date = date('Y-m-d',strtotime($timestamp));
-$ID=$_GET['id'];
+
+
+if (isset($_GET['invoice'])) {
+  $ID=$_GET['invoice'];
+  $query="SELECT * FROM billing WHERE InvoiceNo='$ID'";
+}else{
+  $ID=$_GET['id'];
 
 $query="SELECT * FROM billing WHERE BillID=$ID";
+}
 $result = mysqli_query($con,$query);
 if(mysqli_num_rows($result)>0)
 {

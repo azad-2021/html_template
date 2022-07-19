@@ -1,7 +1,7 @@
 <?php 
 include "connection.php";
-
-$userid=1;
+include "session.php";
+$userid=$_SESSION['userid'];
 
 date_default_timezone_set('Asia/Calcutta');
 $timestamp =date('y-m-d H:i:s');

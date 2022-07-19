@@ -14,15 +14,14 @@ if(mysqli_num_rows($result)>0)
 		print "<tr>";
 		print '<td>'.$row['ItemName']."</td>";
 		print '<td>'.$row['Category']."</td>";
-		print '<td>0</td>';
+		print '<td>'.$row['Qty']-$row['SaledQty'].'</td>';
 		print '<td>'.$row['ExpiryDate']."</td>";
 		print '<td>'.$row['SellerName']."</td>";
 		print '<td>'.$row['PaidAmount']."</td>";
 		print '<td>'.$row['Discount']."</td>";
 		print '<td>'.$row['SellingRate']."</td>";
 		print '<td>'.$row['PurchaseDate']."</td>";
-		
-		print "<tr>";  
+		print "</tr>";  
 	}
 
 

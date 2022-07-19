@@ -1,9 +1,8 @@
-
 <?php 
 
 include "connection.php";
-
-$userid=1;
+include "session.php";
+$userid=$_SESSION['userid'];
 
 date_default_timezone_set('Asia/Calcutta');
 $timestamp =date('y-m-d H:i:s');
@@ -181,6 +180,8 @@ if (!empty($ItemIDArray))
 	$Patient=$_POST['Patient'];
 	$Doctor=$_POST['Doctor'];
 
+
+
 	$query="SELECT * from billing order by BillID desc Limit 1";
 	$result = mysqli_query($con,$query);
 	if(mysqli_num_rows($result)>0)
@@ -195,16 +196,65 @@ if (!empty($ItemIDArray))
 	for ($i=0; $i < count($ItemIDArray); $i++) { 
 
 
-		$sql = "INSERT INTO billing (ItemID, Rate, Qty, Amount, Discount, BillDate, ExpiryDate, InvoiceNo, 	PateintName, DrName)
-		VALUES ($ItemIDArray[$i], $RateArray[$i], $QtyArray[$i], $AmountArray[$i], $DiscountArray[$i], '$Date', '$ExpArray[$i]', '$InvoiceNo', '$Patient', '$Doctor')";
+		$query="SELECT * from purchase WHERE ItemID=$ItemIDArray[$i] and ExpiryDate='$ExpArray[$i]'";
+		$result = mysqli_query($con,$query);
+		if(mysqli_num_rows($result)>0)
+		{
+			$arr=mysqli_fetch_assoc($result);
+			$Saled=$arr['SaledQty'];
+		}
+		$Saled=$Saled+$QtyArray[$i];
+
+		$sql = "INSERT INTO billing (ItemID, Rate, Qty, Amount, Discount, BillDate, ExpiryDate, InvoiceNo, 	PateintName, DrName, BilledBy)
+		VALUES ($ItemIDArray[$i], $RateArray[$i], $QtyArray[$i], $AmountArray[$i], $DiscountArray[$i], '$Date', '$ExpArray[$i]', '$InvoiceNo', '$Patient', '$Doctor', $userid)";
 
 		if ($con->query($sql) === TRUE) {
-		} else {
+			$last_id = $con->insert_id;
+			$sql2 = "UPDATE purchase SET SaledQty=$Saled WHERE ItemID=$ItemIDArray[$i]";
+			if ($con->query($sql2) === TRUE) {
+			} else {
+				echo "Error: " . $sql2 . "<br>" . $con->error;
+			}
+
+		}else{
 			echo "Error: " . $sql . "<br>" . $con->error;
 		}
 	}
-	echo $last_id = $con->insert_id;
+	echo $last_id;
 }
 
 
+$RateChange=!empty($_POST['RateChange'])?$_POST['RateChange']:'';
+if (!empty($RateChange))
+{
+
+	$ItemIDCR=!empty($_POST['ItemIDCR'])?$_POST['ItemIDCR']:'';
+
+
+	$sql = "UPDATE items set SellingRate=$RateChange, UpdatedDate='$Date', UpdatedByID=$userid WHERE ItemID=$ItemIDCR";
+
+	if ($con->query($sql) === TRUE) {
+		echo 1;
+	} else {
+		echo "Error: " . $sql . "<br>" . $con->error;
+	}
+
+}
+
+$CategoryIDChange=!empty($_POST['CategoryIDChange'])?$_POST['CategoryIDChange']:'';
+if (!empty($CategoryIDChange))
+{
+
+	$ItemIDC=!empty($_POST['ItemIDC'])?$_POST['ItemIDC']:'';
+
+
+	$sql = "UPDATE items set CategoryID=$CategoryIDChange, UpdatedDate='$Date', UpdatedByID=$userid WHERE ItemID=$ItemIDC";
+
+	if ($con->query($sql) === TRUE) {
+		echo 1;
+	} else {
+		echo "Error: " . $sql . "<br>" . $con->error;
+	}
+
+}
 ?>

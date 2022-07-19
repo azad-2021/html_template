@@ -21,10 +21,12 @@
 -->
 <script src="js/sweetalert2.js"></script>
 <script src="js/jquery-3.6.0.min.js"></script>
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/responsive/2.2.9/css/responsive.dataTables.min.css">
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.3/css/jquery.dataTables.min.css">
 
 <style type="text/css">
-  .modal-content{
-    border:2px solid #57CF16;
-  }
+.modal-content{
+  border:2px solid #57CF16;
+}
 </style>
 

@@ -11,7 +11,7 @@ $Date = date('Y-m-d',strtotime($timestamp));
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>Items</title>
+  <title>All Bills</title>
   <meta name="description" content="">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="robots" content="all,follow">
@@ -49,24 +49,18 @@ $Date = date('Y-m-d',strtotime($timestamp));
       <div class="table-responsive">
         <table class="table table-hover table-bordered border-primary" id="example">
           <thead>
-            <th>Item Name</th>
-            <th>Category</th>
-            <th>In stock</th>
-            <th>Expiry Date</th>
-            <th>Purchase From</th>
-            <th>Purchase Amount</th>
-            <th>Purchase Discount</th>
-            <th>Selling Rate</th>
-            <th>Purchase Date</th>
+            <th>Patient Name</th>
+            <th>Doctor Name</th>
+            <th>Bill Amount</th>
+            <th>Bill Date</th>
+            <th>Invoice No</th>
+            <th>Action</th>
           </thead>
+          
           <tbody id="">
             <?php 
 
-            $query="SELECT * FROM `purchase` 
-            JOIN items on purchase.ItemID=items.ItemID
-            JOIN sellers ON purchase.SellerID=sellers.SellerID
-            join category on items.CategoryID=category.CategoryID
-            WHERE (Qty-SaledQty)>0";
+            $query="SELECT PateintName, DrName, sum(Amount), BillDate, InvoiceNo, BillID FROM billing WHERE Cancelled=0 group by InvoiceNo Order By BillDate desc";
             $result = mysqli_query($con,$query);
             if(mysqli_num_rows($result)>0)
             {
@@ -75,15 +69,12 @@ $Date = date('Y-m-d',strtotime($timestamp));
               while ($row=mysqli_fetch_assoc($result))
               {
                 print "<tr>";
-                print '<td>'.$row['ItemName']."</td>";
-                print '<td>'.$row['Category']."</td>";
-                print '<td>'.$row['Qty']-$row['SaledQty'].'</td>';
-                print '<td><span class="d-none">'.$row['ExpiryDate'].'</span>'.date('d-M-Y',strtotime($row['ExpiryDate']))."</td>";
-                print '<td>'.$row['SellerName']."</td>";
-                print '<td>'.$row['PaidAmount']."</td>";
-                print '<td>'.$row['Discount']."</td>";
-                print '<td>'.$row['SellingRate']."</td>";
-                print '<td><span class="d-none">'.$row['PurchaseDate'].'</span>'.date('d-M-Y',strtotime($row['PurchaseDate']))."</td>";
+                print '<td>'.$row['PateintName']."</td>";
+                print '<td>'.$row['DrName']."</td>";
+                print '<td>'.$row['sum(Amount)'].'</td>';
+                print '<td><span class="d-none">'.$row['BillDate'].'</span>'.date('d-M-Y',strtotime($row['BillDate']))."</td>";
+                print '<td>'.$row['InvoiceNo']."</td>";
+                print '<td><a target="_Blank" href="invoice.php?id='.$row['BillID'].'">Print Invoice</a></td>';
                 print "</tr>";  
               }
 

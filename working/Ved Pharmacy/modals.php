@@ -202,14 +202,14 @@
           <center>
             <div class="col-lg-6">
               <label>Enter invoice number</label>
-              <input type="text" class="form-control" name="FindBill" id="FindBill">
+              <input type="text" class="form-control" name="FindBill" id="FindBillNo">
             </div>
           </center>
         </div>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary">Search</button>
+        <button type="button" class="btn btn-primary BillSearch">Search</button>
       </div>
     </div>
   </div>
