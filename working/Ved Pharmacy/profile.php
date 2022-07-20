@@ -95,6 +95,7 @@ if (isset($_POST['submit'])) {
   <script src="vendor/choices.js/public/assets/scripts/choices.min.js"></script>
   <script src="vendor/overlayscrollbars/js/OverlayScrollbars.min.js"></script>
   <script src="js/charts-home.js"></script>
+  <script src="main.js"></script>
   <!-- Main File-->
   <script src="js/front.js"></script>
 

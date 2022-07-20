@@ -23,25 +23,25 @@
       <li class="sidebar-item">
         <a class="sidebar-link" href="profile.php"> 
           <svg class="svg-icon svg-icon-sm svg-icon-heavy me-xl-2">
-            <use xlink:href="#real-estate-1"> </use>
+            <use xlink:href="#portfolio-grid-1"> </use>
           </svg>Profile 
         </a>
       </li>
 
       <li class="sidebar-item"><a class="sidebar-link" href="" data-bs-toggle="modal" data-bs-target="#AddUser"> 
         <svg class="svg-icon svg-icon-sm svg-icon-heavy me-xl-2">
-          <use xlink:href="#survey-1"> </use>
+          <use xlink:href="#portfolio-grid-1"> </use>
         </svg>Add User</a>
       </li>
       <li class="sidebar-item"><a class="sidebar-link" href="" data-bs-toggle="modal" data-bs-target="#AddSeller"> 
         <svg class="svg-icon svg-icon-sm svg-icon-heavy me-xl-2">
-          <use xlink:href="#survey-1"> </use>
+          <use xlink:href="#portfolio-grid-1"> </use>
         </svg>Add Seller</a>
       </li>
       <li class="sidebar-item">
         <a class="sidebar-link" href="" data-bs-toggle="modal" data-bs-target="#AddCategory"> 
           <svg class="svg-icon svg-icon-sm svg-icon-heavy me-xl-2">
-            <use xlink:href="#sales-up-1"> </use>
+            <use xlink:href="#portfolio-grid-1"> </use>
           </svg>Create Category
         </a>
       </li>
@@ -65,11 +65,7 @@
           <use xlink:href="#portfolio-grid-1"> </use>
         </svg>All items</a>
       </li>
-      <li class="sidebar-item"><a class="sidebar-link" href="allinvoice.php"> 
-        <svg class="svg-icon svg-icon-sm svg-icon-heavy me-xl-2">
-          <use xlink:href="#portfolio-grid-1"> </use>
-        </svg>All Invoice</a>
-      </li>
+
     </ul>
 
     <span class="text-uppercase text-gray-500 text-sm fw-bold letter-spacing-0 mx-lg-2 heading">Stock</span>
@@ -77,7 +73,7 @@
 
       <li class="sidebar-item"><a class="sidebar-link" href="" data-bs-toggle="modal" data-bs-target="#AddPurchase"> 
         <svg class="svg-icon svg-icon-sm svg-icon-heavy me-xl-2">
-          <use xlink:href="#survey-1"> </use>
+          <use xlink:href="#portfolio-grid-1"> </use>
         </svg>Purchase Entry</a>
       </li>
       <li class="sidebar-item"><a class="sidebar-link" href="itemlist.php"> 
@@ -100,15 +96,10 @@
           <use xlink:href="#chart-1"> </use>
         </svg>Create Invoice</a>
       </li>
-      <li class="sidebar-item"> <a class="sidebar-link" href=""> 
-        <svg class="svg-icon svg-icon-xs svg-icon-heavy me-xl-2">
-          <use xlink:href="#quality-1"> </use>
-        </svg>Update Rate</a>
-      </li>
-      <li class="sidebar-item"> <a class="sidebar-link" href=""> 
-        <svg class="svg-icon svg-icon-xs svg-icon-heavy me-xl-2">
-          <use xlink:href="#quality-1"> </use>
-        </svg>All Bills</a>
+      <li class="sidebar-item"><a class="sidebar-link" href="allinvoice.php"> 
+        <svg class="svg-icon svg-icon-sm svg-icon-heavy me-xl-2">
+          <use xlink:href="#portfolio-grid-1"> </use>
+        </svg>All Invoice</a>
       </li>
     </ul>
   </nav>

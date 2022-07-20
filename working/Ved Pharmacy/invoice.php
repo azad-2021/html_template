@@ -141,7 +141,7 @@ if(mysqli_num_rows($result)>0)
                 </span>
               </center>
               <span style="margin-top: -50px; float: right;">
-                Mobile No. <strong><br>8707488809, 9554539571</strong>
+                Mobile No. <strong><br>+918707488809, +919621505250</strong>
               </span>
             </p>
           </div>

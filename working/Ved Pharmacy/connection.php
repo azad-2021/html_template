@@ -1,8 +1,8 @@
 <?php      
     $host = "217.21.95.52";  
-    $user = "u241098585_medshop";  
+    $user = "u241098585_ved";  
     $password = '1@STARlaboratories';  
-    $db_1 = "u241098585_medshop";
+    $db_1 = "u241098585_VedPharmacy";
 
    $con = mysqli_connect($host, $user, $password, $db_1);  
    if(mysqli_connect_errno()) {  
