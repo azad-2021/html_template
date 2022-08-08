@@ -421,7 +421,7 @@ $('.AddInvoice').on('click', function () {
   var SubAmount=SaleRate*Qty;
   var Amount=SubAmount-((SubAmount*Discount)/100);
 
-  if (ItemID && SaleRate && Qty && Discount && ItemExpiry && Amount && DateErr==0 && Qty<=AvQtys) {
+  if (ItemID && SaleRate && Qty && Discount && ItemExpiry && Amount && DateErr==0) {
 
     if (ItemIDArray.contains(ItemID)==true) {
       ExistErr();

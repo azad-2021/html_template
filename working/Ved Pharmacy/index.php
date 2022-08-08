@@ -86,6 +86,7 @@ while($arr=mysqli_fetch_assoc($result)){
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <title>Home</title>
   <?php include "header.php"; ?>
+
 </head>
 <body>
 

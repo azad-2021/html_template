@@ -47,7 +47,7 @@ $NewSeller=!empty($_POST['NewSeller'])?$_POST['NewSeller']:'';
 if (!empty($NewSeller))
 {
 	$NewSellerNumber=!empty($_POST['NewSellerNumber'])?$_POST['NewSellerNumber']:'';
-	$NewSellerNumber='+91'.$NewSellerNumber;
+	$NewSellerNumber=$NewSellerNumber;
 	$query="SELECT * from sellers WHERE SellerName='$NewSeller' and ContactNumber='$NewSellerNumber'";
 	$result = mysqli_query($con,$query);
 	if(mysqli_num_rows($result)>0)

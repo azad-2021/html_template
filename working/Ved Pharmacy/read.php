@@ -30,9 +30,7 @@ if (!empty($ItemList))
 $CategoryIDP=!empty($_POST['CategoryIDP'])?$_POST['CategoryIDP']:'';
 if (!empty($CategoryIDP))
 {
-    $query="SELECT * from items 
-    join purchase on items.ItemID=purchase.ItemID
-    WHERE CategoryID=$CategoryIDP and (Qty-SaledQty)>0 order by ItemName";
+    $query="SELECT * from items WHERE CategoryID=$CategoryIDP order by ItemName";
     $result = mysqli_query($con,$query);
     if(mysqli_num_rows($result)>0)
     {

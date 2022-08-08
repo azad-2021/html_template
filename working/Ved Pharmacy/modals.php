@@ -76,7 +76,7 @@
             </div>
             <div class="col-lg-6">
               <label>Enter Seller Number</label>
-              <input type="number" min=0 class="form-control" name="NewSellerNumber" id="NewSellerNumber" onkeydown="limit(this);" onkeyup="limit(this);">
+              <input type="text" min=0 class="form-control" name="NewSellerNumber" id="NewSellerNumber" >
             </div>
           </div>
         </form>

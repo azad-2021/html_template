@@ -158,7 +158,7 @@ if(mysqli_num_rows($result)>0)
           </div>
           <center>
             <p style="margin-top:-10px">
-              <strong>Hearist & Druggist</strong>
+              <strong>Druggist & Chemist</strong>
             </p>
           </center>
         </div>
